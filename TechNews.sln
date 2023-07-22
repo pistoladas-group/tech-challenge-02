@@ -1,0 +1,47 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{99F09EF3-EFE4-4355-8499-309A07FA1CD7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "api", "api", "{F0ABAE54-8C61-4F4F-81FD-79F83DC3800A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechNews.Api", "src\api\TechNews.Api\TechNews.Api.csproj", "{F17EE5B3-2FE9-4611-A7AF-6886D7F6B293}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechNews.Auth.Api", "src\api\TechNews.Auth.Api\TechNews.Auth.Api.csproj", "{8BE6D2B0-491D-4163-9EF1-F54371B1A442}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "web", "web", "{F3F3F319-52E4-474D-BE36-1A920E880262}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechNews.Web", "src\web\TechNews.Web\TechNews.Web.csproj", "{59158D4C-E9DE-4B4C-8B06-0619F01717F2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F17EE5B3-2FE9-4611-A7AF-6886D7F6B293}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F17EE5B3-2FE9-4611-A7AF-6886D7F6B293}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F17EE5B3-2FE9-4611-A7AF-6886D7F6B293}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F17EE5B3-2FE9-4611-A7AF-6886D7F6B293}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BE6D2B0-491D-4163-9EF1-F54371B1A442}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BE6D2B0-491D-4163-9EF1-F54371B1A442}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BE6D2B0-491D-4163-9EF1-F54371B1A442}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BE6D2B0-491D-4163-9EF1-F54371B1A442}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59158D4C-E9DE-4B4C-8B06-0619F01717F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59158D4C-E9DE-4B4C-8B06-0619F01717F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59158D4C-E9DE-4B4C-8B06-0619F01717F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59158D4C-E9DE-4B4C-8B06-0619F01717F2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F0ABAE54-8C61-4F4F-81FD-79F83DC3800A} = {99F09EF3-EFE4-4355-8499-309A07FA1CD7}
+		{F17EE5B3-2FE9-4611-A7AF-6886D7F6B293} = {F0ABAE54-8C61-4F4F-81FD-79F83DC3800A}
+		{8BE6D2B0-491D-4163-9EF1-F54371B1A442} = {F0ABAE54-8C61-4F4F-81FD-79F83DC3800A}
+		{F3F3F319-52E4-474D-BE36-1A920E880262} = {99F09EF3-EFE4-4355-8499-309A07FA1CD7}
+		{59158D4C-E9DE-4B4C-8B06-0619F01717F2} = {F3F3F319-52E4-474D-BE36-1A920E880262}
+	EndGlobalSection
+EndGlobal

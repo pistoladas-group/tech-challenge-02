@@ -1,0 +1,7 @@
+{
+    "files.exclude": {
+        "**/.git": false,
+        "**/bin": true,
+        "**/obj": true,
+    }
+}
