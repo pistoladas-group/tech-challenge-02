@@ -1,14 +1,23 @@
+using TechNews.Auth.Api.Configuration;
+using TechNews.Auth.Api.Services.Crypto.RSA;
+
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddControllers(options => options.Filters.ConfigureFilters());
+
+builder.Services
+        .AddEndpointsApiExplorer()
+        .ConfigureSwagger()
+        .ConfigureIdentity()
+        .ConfigureDatabase(builder.Configuration);
+
+builder.Services.AddScoped<RsaCrypto>();
 
 var app = builder.Build();
 
-app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerConfiguration();
+app.UseHsts();
 app.UseHttpsRedirection();
-app.UseAuthorization();
+app.UseIdentityConfiguration();
 app.MapControllers();
 app.Run();

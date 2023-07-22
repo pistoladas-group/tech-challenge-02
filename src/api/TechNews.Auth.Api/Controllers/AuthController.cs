@@ -43,7 +43,7 @@ public class AuthController : ControllerBase
     {
         var id = user.Id ?? Guid.NewGuid();
 
-        //TODO: verificar se já existe algum usuário com aquele id, para evitar exception
+        //TODO: verificar se jï¿½ existe algum usuï¿½rio com aquele id, para evitar exception
 
         var createUserResult = await _userManager.CreateAsync(new User(id, Guid.Empty, user.Email, user.UserName), user.Password);
 
@@ -51,8 +51,6 @@ public class AuthController : ControllerBase
         {
             return BadRequest(new ApiResponse(errors: createUserResult.Errors.ToList().ConvertAll(x => x.Description)));
         }
-
-        // TODO: Disparar evento...
 
         return CreatedAtAction(nameof(GetUser), new { userId = id }, new ApiResponse());
     }
