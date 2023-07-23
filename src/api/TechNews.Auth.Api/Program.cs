@@ -9,9 +9,8 @@ builder.Services
         .AddEnvironmentVariables(builder.Environment)
         .ConfigureSwagger()
         .ConfigureIdentity()
-        .ConfigureDatabase(builder.Configuration);
-
-builder.Services.AddScoped<RsaCrypto>();
+        .ConfigureDatabase(builder.Configuration)
+        .ConfigureDependencyInjections();
 
 var app = builder.Build();
 
