@@ -27,7 +27,7 @@ public static class EnvironmentVariables
                 // TODO: Configure warning log
                 
                throw new ApplicationException("Environment File (.env) not found. The application needs a .env file to run locally. " +
-                                                "Please check the section Environment Variables of the README");
+                                                "Please check the section Environment Variables of the README.");
             }
 
             // Ignored if other environments because it is using runtime environment variables
