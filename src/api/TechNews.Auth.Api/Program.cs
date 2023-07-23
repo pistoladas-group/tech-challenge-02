@@ -6,6 +6,7 @@ builder.Services.AddControllers(options => options.Filters.ConfigureFilters());
 
 builder.Services
         .AddEndpointsApiExplorer()
+        .AddEnvironmentVariables(builder.Environment)
         .ConfigureSwagger()
         .ConfigureIdentity()
         .ConfigureDatabase(builder.Configuration);
