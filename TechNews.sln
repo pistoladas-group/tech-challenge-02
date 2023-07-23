@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{99F09EF3-EFE
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "api", "api", "{F0ABAE54-8C61-4F4F-81FD-79F83DC3800A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TechNews.Api", "src\api\TechNews.Api\TechNews.Api.csproj", "{F17EE5B3-2FE9-4611-A7AF-6886D7F6B293}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TechNews.Core.Api", "src\api\TechNews.Core.Api\TechNews.Core.Api.csproj", "{F17EE5B3-2FE9-4611-A7AF-6886D7F6B293}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TechNews.Auth.Api", "src\api\TechNews.Auth.Api\TechNews.Auth.Api.csproj", "{8BE6D2B0-491D-4163-9EF1-F54371B1A442}"
 EndProject

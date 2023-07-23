@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace TechNews.Api.Controllers;
+namespace TechNews.Core.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]

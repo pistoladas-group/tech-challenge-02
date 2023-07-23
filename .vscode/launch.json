@@ -6,9 +6,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/src/api/TechNews.Api/bin/Debug/net7.0/TechNews.Api.dll",
+            "program": "${workspaceFolder}/src/api/TechNews.Core.Api/bin/Debug/net7.0/TechNews.Core.Api.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/src/api/TechNews.Api",
+            "cwd": "${workspaceFolder}/src/api/TechNews.Core.Api",
             "stopAtEntry": false,
             "serverReadyAction": {
                 "action": "openExternally",

@@ -1,4 +1,4 @@
-namespace TechNews.Api;
+namespace TechNews.Core.Api;
 
 public class WeatherForecast
 {
