@@ -1,5 +1,4 @@
-using TechNews.Auth.Api.Configuration;
-using TechNews.Auth.Api.Services.Crypto.RSA;
+using TechNews.Auth.Api.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 

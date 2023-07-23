@@ -65,7 +65,7 @@ public class AuthController : ControllerBase
     /// <response code="500">There was an internal problem</response>
     [HttpGet("user/{userId:guid}")]
     [Consumes("application/json")]
-    [Produces("application/son")]
+    [Produces("application/json")]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.NotFound)]

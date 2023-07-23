@@ -1,7 +1,7 @@
 using System.Reflection;
 using Microsoft.OpenApi.Models;
 
-namespace TechNews.Auth.Api.Configuration;
+namespace TechNews.Auth.Api.Configurations;
 
 public static class Swagger
 {

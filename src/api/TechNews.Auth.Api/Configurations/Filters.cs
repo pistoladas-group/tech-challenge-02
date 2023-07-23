@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using TechNews.Auth.Api.Filters;
 
-namespace TechNews.Auth.Api.Configuration;
+namespace TechNews.Auth.Api.Configurations;
 
 public static class Filters
 {

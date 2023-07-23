@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using TechNews.Auth.Api.Data;
 
-namespace TechNews.Auth.Api.Configuration;
+namespace TechNews.Auth.Api.Configurations;
 
 public static class Identity
 {
