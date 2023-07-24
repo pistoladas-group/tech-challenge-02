@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Serilog;
 using TechNews.Common.Library;
 
 namespace TechNews.Auth.Api.Filters;
@@ -8,6 +9,8 @@ public class ExceptionFilter : IExceptionFilter
 {
     public void OnException(ExceptionContext context)
     {
+        Log.Error(context.Exception, context.Exception.Message);
+        
         if (context.Result != null)
         {
             return;

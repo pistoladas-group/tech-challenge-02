@@ -6,10 +6,11 @@ builder.Services.AddControllers(options => options.Filters.ConfigureFilters());
 
 builder.Services
         .AddEndpointsApiExplorer()
-        .AddEnvironmentVariables(builder.Environment)
         .ConfigureSwagger()
+        .AddEnvironmentVariables(builder.Environment)
+        .AddLoggingConfiguration(builder.Host)
         .ConfigureIdentity()
-        .ConfigureDatabase(builder.Configuration)
+        .ConfigureDatabase()
         .ConfigureDependencyInjections();
 
 var app = builder.Build();

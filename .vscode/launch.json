@@ -10,6 +10,7 @@
             "args": [],
             "cwd": "${workspaceFolder}/src/api/TechNews.Core.Api",
             "stopAtEntry": false,
+            "externalConsole": true,
             "serverReadyAction": {
                 "action": "openExternally",
                 "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
@@ -28,6 +29,7 @@
             "args": [],
             "cwd": "${workspaceFolder}/src/api/TechNews.Auth.Api",
             "stopAtEntry": false,
+            "externalConsole": true,
             "serverReadyAction": {
                 "action": "openExternally",
                 "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
@@ -46,6 +48,7 @@
             "args": [],
             "cwd": "${workspaceFolder}/src/web/TechNews.Web",
             "stopAtEntry": false,
+            "externalConsole": true,
             "serverReadyAction": {
                 "action": "openExternally",
                 "pattern": "\\bNow listening on:\\s+(https?://\\S+)"

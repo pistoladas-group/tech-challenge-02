@@ -5,7 +5,7 @@ namespace TechNews.Auth.Api.Configurations;
 
 public static class Database
 {
-    public static IServiceCollection ConfigureDatabase(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection ConfigureDatabase(this IServiceCollection services)
     {
         var connectionString = Environment.GetEnvironmentVariable(EnvironmentVariables.DatabaseConnectionString);
 
