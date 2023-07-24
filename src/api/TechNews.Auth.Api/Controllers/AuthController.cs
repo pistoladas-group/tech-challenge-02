@@ -45,7 +45,7 @@ public class AuthController : ControllerBase
 
         //TODO: verificar se j� existe algum usu�rio com aquele id, para evitar exception
 
-        var createUserResult = await _userManager.CreateAsync(new User(id, Guid.Empty, user.Email, user.UserName), user.Password);
+        var createUserResult = await _userManager.CreateAsync(new User(id, user.Email, user.UserName), user.Password);
 
         if (!createUserResult.Succeeded)
         {
