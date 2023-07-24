@@ -5,9 +5,9 @@ namespace TechNews.Auth.Api.Configurations;
 
 public static class EnvironmentVariables
 {
-    public static string DatabaseConnectionString => "TECHNEWS_CORE_API_DATABASE_CONNECTION_STRING";
-    public static string DiscordWebhookId => "TECHNEWS_CORE_API_DISCORD_WEBHOOK_ID";
-    public static string DiscordWebhookToken => "TECHNEWS_CORE_API_DISCORD_WEBHOOK_TOKEN";
+    public static string DatabaseConnectionString => "TECHNEWS_AUTH_API_DATABASE_CONNECTION_STRING";
+    public static string DiscordWebhookId => "TECHNEWS_AUTH_API_DISCORD_WEBHOOK_ID";
+    public static string DiscordWebhookToken => "TECHNEWS_AUTH_API_DISCORD_WEBHOOK_TOKEN";
     
     public static IServiceCollection AddEnvironmentVariables(this IServiceCollection services, IWebHostEnvironment environment) 
     {
