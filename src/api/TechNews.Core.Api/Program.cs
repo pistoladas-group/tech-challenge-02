@@ -1,8 +1,16 @@
+using TechNews.Core.Api.Configurations;
+
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddControllers(options => options.Filters.ConfigureFilters());
+
+builder.Services
+        .AddEndpointsApiExplorer()
+        .ConfigureSwagger()
+        .AddEnvironmentVariables(builder.Environment)
+        .AddLoggingConfiguration(builder.Host)
+        .ConfigureDatabase()
+        .ConfigureDependencyInjections();
 
 var app = builder.Build();
 
