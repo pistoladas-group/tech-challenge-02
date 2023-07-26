@@ -1,14 +1,13 @@
 using System.Net;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Cryptography;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using TechNews.Auth.Api.Data;
 using TechNews.Auth.Api.Models;
 using TechNews.Common.Library;
-using TechNews.Auth.Api.Services.Crypto.RSA;
+using TechNews.Auth.Api.Services;
 
 namespace TechNews.Auth.Api.Controllers;
 
@@ -17,13 +16,13 @@ public class AuthController : ControllerBase
 {
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
-    private readonly RsaCrypto _crypto;
+    private readonly RsaTokenSigner _rsaTokenSigner;
 
-    public AuthController(UserManager<User> userManager, SignInManager<User> signInManager, RsaCrypto crypto)
+    public AuthController(UserManager<User> userManager, SignInManager<User> signInManager, RsaTokenSigner crypto)
     {
         _userManager = userManager;
         _signInManager = signInManager;
-        _crypto = crypto;
+        _rsaTokenSigner = crypto;
     }
 
     /// <summary>
@@ -150,10 +149,6 @@ public class AuthController : ControllerBase
 
         claims.AddClaims(tokenClaims);
 
-        var key = _crypto.CreateKeys();
-        var rsa = RSA.Create();
-        rsa.ImportRSAPrivateKey(key.Data, out _);
-
         //TODO: pegar dinamicamente (https) e (host):
         const string currentIssuer = "https://localhost:7219";
 
@@ -163,11 +158,8 @@ public class AuthController : ControllerBase
             Issuer = currentIssuer,
             Subject = claims,
             Expires = DateTime.UtcNow.AddMinutes(10), //TODO: tirar hardcode
-            TokenType = "jwt",
-            SigningCredentials = new SigningCredentials(new RsaSecurityKey(rsa), SecurityAlgorithms.RsaSha256)
-            {
-                CryptoProviderFactory = new CryptoProviderFactory { CacheSignatureProviders = false }
-            }
+            TokenType = "at + jwt",
+            SigningCredentials = _rsaTokenSigner.GetSigningCredentials()
         });
 
         return tokenHandler.WriteToken(token);

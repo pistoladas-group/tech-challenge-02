@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using Microsoft.IdentityModel.Tokens;
 
-namespace TechNews.Auth.Api.Services.Crypto.RSA;
+namespace TechNews.Auth.Api.Models;
 
 public class RsaPublicParameters
 {
