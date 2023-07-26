@@ -8,7 +8,7 @@ using TechNews.Core.Api.Data;
 
 #nullable disable
 
-namespace TechNews.Core.Api.Migrations
+namespace TechNews.Core.Api.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -26,58 +26,68 @@ namespace TechNews.Core.Api.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("UNIQUEIDENTIFIER")
+                        .HasColumnName("Id");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("CreatedAt");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(500)");
+                        .HasColumnType("VARCHAR(100)");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .HasColumnType("BIT")
+                        .HasColumnName("IsDeleted");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(500)");
+                        .HasColumnType("VARCHAR(100)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK_Authors");
 
-                    b.ToTable("Authors");
+                    b.ToTable("Authors", (string)null);
                 });
 
             modelBuilder.Entity("TechNews.Core.Api.Data.Models.News", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("UNIQUEIDENTIFIER")
+                        .HasColumnName("Id");
 
                     b.Property<Guid>("AuthorId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("UNIQUEIDENTIFIER")
+                        .HasColumnName("AuthorId");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("CreatedAt");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(500)");
+                        .HasColumnType("VARCHAR(5000)");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .HasColumnType("BIT")
+                        .HasColumnName("IsDeleted");
 
-                    b.Property<DateTime>("PublishDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("PublishDate")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(100)");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(500)");
+                        .HasColumnType("VARCHAR(100)");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK_News");
 
                     b.HasIndex("AuthorId");
 
-                    b.ToTable("News");
+                    b.ToTable("News", (string)null);
                 });
 
             modelBuilder.Entity("TechNews.Core.Api.Data.Models.News", b =>
@@ -85,7 +95,8 @@ namespace TechNews.Core.Api.Migrations
                     b.HasOne("TechNews.Core.Api.Data.Models.Author", "Author")
                         .WithMany("News")
                         .HasForeignKey("AuthorId")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_News_Authors");
 
                     b.Navigation("Author");
                 });

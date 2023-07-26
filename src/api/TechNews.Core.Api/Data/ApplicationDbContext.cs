@@ -17,6 +17,7 @@ public class ApplicationDbContext : DbContext
         base.OnModelCreating(modelBuilder);
         DefineDeleteStrategy(modelBuilder);
         DefineColumnsWithoutMaxLength(modelBuilder);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
     }
 
     private static void DefineDeleteStrategy(ModelBuilder modelBuilder)

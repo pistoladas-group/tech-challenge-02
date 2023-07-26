@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace TechNews.Core.Api.Migrations
+namespace TechNews.Core.Api.Data.Migrations
 {
     /// <inheritdoc />
     public partial class FirstMigration : Migration
@@ -15,11 +15,11 @@ namespace TechNews.Core.Api.Migrations
                 name: "Authors",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "VARCHAR(500)", nullable: false),
-                    Email = table.Column<string>(type: "VARCHAR(500)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    Id = table.Column<Guid>(type: "UNIQUEIDENTIFIER", nullable: false),
+                    Name = table.Column<string>(type: "VARCHAR(100)", nullable: false),
+                    Email = table.Column<string>(type: "VARCHAR(100)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "BIT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -30,19 +30,19 @@ namespace TechNews.Core.Api.Migrations
                 name: "News",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Title = table.Column<string>(type: "VARCHAR(500)", nullable: false),
-                    Description = table.Column<string>(type: "VARCHAR(500)", nullable: false),
-                    PublishDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AuthorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    Id = table.Column<Guid>(type: "UNIQUEIDENTIFIER", nullable: false),
+                    Title = table.Column<string>(type: "VARCHAR(100)", nullable: false),
+                    Description = table.Column<string>(type: "VARCHAR(5000)", nullable: false),
+                    PublishDate = table.Column<string>(type: "VARCHAR(100)", nullable: false),
+                    AuthorId = table.Column<Guid>(type: "UNIQUEIDENTIFIER", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "BIT", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_News", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_News_Authors_AuthorId",
+                        name: "FK_News_Authors",
                         column: x => x.AuthorId,
                         principalTable: "Authors",
                         principalColumn: "Id");
