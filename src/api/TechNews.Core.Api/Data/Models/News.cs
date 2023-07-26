@@ -10,11 +10,6 @@ public class News : Entity
     public Guid AuthorId { get; set; }
     public Author Author { get; set; }
 
-    //EF
-    protected News()
-    {
-    }
-
     public News(string title, string description, DateTime publishDate, Author author)
     {
         Title = title;
