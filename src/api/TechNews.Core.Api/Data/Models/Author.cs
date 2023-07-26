@@ -8,6 +8,11 @@ public class Author : Entity
     public string Email { get; set; }
     public List<News> News { get; set; } = new List<News>();
 
+    //EF
+    protected Author()
+    {
+    }
+
     public Author(string name, string email)
     {
         Name = name;
