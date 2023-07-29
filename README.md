@@ -2,7 +2,7 @@
 
 Work In Progress
 
-# TODO's
+<!-- # TODO's
 - Descrever o fluxo OAuth implementado:
     - (talvez uns diagramas UML de sequência?)
     - Descrever a rotação da chave e o Key Vault (citar a necessidade de um serviço de instância única)
@@ -10,6 +10,14 @@ Work In Progress
     - Descrever o JWKS
     - Descrever a validação do JWT com a chave pública
 
-- Descrever como é feito o deploy (ARM, Github Actions, Database, automatização, etc)
+- Descrever como é feito o deploy 
+    - ARM Template
+    - Github Actions
+    - Database scripts ou Migrations
+    - Automatização
+    - Estratégia de deploy e rollback
+    - ACR & ACI
+    - etc...
+
 - Descrever estilos e padrões de arquiteturas escolhidos (camadas com REST... etc)
-- Descrever um Modelo Entidade Relacional do banco (pelo menos do Core talvez?)
+- Descrever um Modelo Entidade Relacional do banco (pelo menos do Core talvez?) -->
