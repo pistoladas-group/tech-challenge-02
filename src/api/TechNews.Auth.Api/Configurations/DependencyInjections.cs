@@ -7,7 +7,7 @@ public static class DependencyInjections
     public static IServiceCollection ConfigureDependencyInjections(this IServiceCollection services)
     {
         services.AddScoped<RsaTokenSigner>();
-        services.AddSingleton<IRsaKeyRetriever, RsaKeyMockRetriever>();
+        services.AddSingleton<ICryptographicKeyRetriever, CryptographicKeyInMemoryRetriever>();
 
         services.AddHostedService<KeyRotatorBackgroundService>();
 

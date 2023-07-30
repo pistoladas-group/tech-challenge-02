@@ -46,7 +46,7 @@ public class KeyRotatorBackgroundService : IHostedService, IDisposable
         Log.Debug("{service}: started.", ServiceName);
 
         using var scope = _serviceScopeFactory.CreateScope();
-        var keyRetrieverService = scope.ServiceProvider.GetRequiredService<IRsaKeyRetriever>();
+        var keyRetrieverService = scope.ServiceProvider.GetRequiredService<ICryptographicKeyRetriever>();
 
         var existingKey = keyRetrieverService.GetExistingKey();
         var isKeyValid = existingKey?.IsValid() ?? false;
@@ -67,10 +67,10 @@ public class KeyRotatorBackgroundService : IHostedService, IDisposable
         Log.Debug("{service}: finished.", ServiceName);
     }
 
-    public RsaKey CreateKey()
+    public CryptographicKey CreateKey()
     {
         var rsa = System.Security.Cryptography.RSA.Create(2048); //TODO: configurar
-        var rsaKey = new RsaKey(rsa);
+        var rsaKey = new CryptographicKey(rsa);
 
         return rsaKey;
     }

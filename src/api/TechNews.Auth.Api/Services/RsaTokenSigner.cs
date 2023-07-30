@@ -4,17 +4,22 @@ namespace TechNews.Auth.Api.Services;
 
 public class RsaTokenSigner
 {
-    private readonly IRsaKeyRetriever _rsaKeyRetriever;
-    public RsaTokenSigner(IRsaKeyRetriever rsaKeyRetriever)
+    private readonly ICryptographicKeyRetriever _cryptographicKeyRetriever;
+    public RsaTokenSigner(ICryptographicKeyRetriever rsaKeyRetriever)
     {
-        _rsaKeyRetriever = rsaKeyRetriever;
+        _cryptographicKeyRetriever = rsaKeyRetriever;
     }
 
-    public SigningCredentials GetSigningCredentials() 
+    public SigningCredentials? GetSigningCredentials()
     {
-        var teste = _rsaKeyRetriever.GetExistingKey();
+        var key = _cryptographicKeyRetriever.GetExistingKey();
 
-        return new SigningCredentials(new RsaSecurityKey(teste.Instance), SecurityAlgorithms.RsaSha256)
+        if (key is null)
+        {
+            return null;
+        }
+
+        return new SigningCredentials(new RsaSecurityKey(key.Instance), SecurityAlgorithms.RsaSha256)
         {
             CryptoProviderFactory = new CryptoProviderFactory { CacheSignatureProviders = false }
         };

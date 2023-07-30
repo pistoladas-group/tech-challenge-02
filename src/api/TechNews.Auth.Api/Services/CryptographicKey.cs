@@ -1,15 +1,17 @@
 namespace TechNews.Auth.Api.Services;
 
-public class RsaKey
+public class CryptographicKey
 {
-    public RsaKey(System.Security.Cryptography.RSA instance)
+    public Guid Id { get; set; }
+    public DateTime CreationDate { get; set; }
+    public System.Security.Cryptography.RSA Instance { get; set; }
+
+    public CryptographicKey(System.Security.Cryptography.RSA instance)
     {
+        Id = Guid.NewGuid();
         CreationDate = DateTime.UtcNow;
         Instance = instance;
     }
-    
-    public DateTime CreationDate { get; set; }
-    public System.Security.Cryptography.RSA Instance  { get; set; }
 
     public bool IsValid()
     {

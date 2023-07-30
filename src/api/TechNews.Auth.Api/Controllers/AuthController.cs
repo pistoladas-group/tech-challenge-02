@@ -131,17 +131,19 @@ public class AuthController : ControllerBase
         }
 
         var claims = await GetUserClaims(registeredUserResult);
+
+        //TODO: Se token for nulo, retornar 500 Internal Server Error
         var token = GetToken(claims, registeredUserResult);
 
         return Ok(new ApiResponse(data: token));
     }
 
-    private string GetToken(ClaimsIdentity claims, User user)
+    private string? GetToken(ClaimsIdentity claims, User user)
     {
         var tokenClaims = new List<Claim>
         {
             new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new(JwtRegisteredClaimNames.Email, user.Email),
+            new(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new(JwtRegisteredClaimNames.Nbf, ToUnixEpochDate(DateTime.UtcNow).ToString()),
             new(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64)
@@ -152,14 +154,18 @@ public class AuthController : ControllerBase
         //TODO: pegar dinamicamente (https) e (host):
         const string currentIssuer = "https://localhost:7219";
 
+        var signingCredentials = _rsaTokenSigner.GetSigningCredentials();
+
+        //TODO: Se signingCredentials for nulo, retornar nulo string? (quer dizer que não existe chave para assinar o token)
+
         var tokenHandler = new JwtSecurityTokenHandler();
         var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
         {
             Issuer = currentIssuer,
             Subject = claims,
             Expires = DateTime.UtcNow.AddMinutes(10), //TODO: tirar hardcode
-            TokenType = "at + jwt",
-            SigningCredentials = _rsaTokenSigner.GetSigningCredentials()
+            TokenType = "at+jwt",
+            SigningCredentials = signingCredentials
         });
 
         return tokenHandler.WriteToken(token);
