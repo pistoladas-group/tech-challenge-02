@@ -15,7 +15,7 @@ Work In Progress
     - Github Actions
     - Database scripts ou Migrations
     - Automatização
-    - Estratégia de deploy e rollback
+    - Estratégia de deploy e rollback (faremos por deployment slots usando app services ou containers usando ACI?)
     - ACR & ACI
     - etc...
 
