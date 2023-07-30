@@ -152,7 +152,7 @@ public class AuthController : ControllerBase
         claims.AddClaims(tokenClaims);
 
         //TODO: pegar dinamicamente (https) e (host):
-        const string currentIssuer = "https://localhost:7219";
+        const string currentIssuer = "https://localhost:7279";
 
         var signingCredentials = _rsaTokenSigner.GetSigningCredentials();
 

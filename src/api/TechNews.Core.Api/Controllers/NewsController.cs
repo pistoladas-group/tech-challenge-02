@@ -1,4 +1,5 @@
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TechNews.Common.Library;
 
@@ -13,8 +14,8 @@ public class NewsController : ControllerBase
     /// </summary>
     /// <response code="200">Returns the resource data</response>
     /// <response code="500">There was an internal problem</response>
+    [Authorize]
     [HttpGet("")]
-    [Consumes("application/json")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.InternalServerError)]
@@ -30,8 +31,8 @@ public class NewsController : ControllerBase
     /// <response code="400">The resource was not found</response>
     /// <response code="404">There is a problem with the request</response>
     /// <response code="500">There was an internal problem</response>
+    [Authorize]
     [HttpGet("{newsId:guid}")]
-    [Consumes("application/json")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.BadRequest)]

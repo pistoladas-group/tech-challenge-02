@@ -10,13 +10,13 @@ builder.Services
         .AddEnvironmentVariables(builder.Environment)
         .AddLoggingConfiguration(builder.Host)
         .ConfigureDatabase()
-        .ConfigureDependencyInjections();
+        .ConfigureDependencyInjections()
+        .AddAuthConfiguration();
 
 var app = builder.Build();
 
-app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerConfiguration();
 app.UseHttpsRedirection();
-app.UseAuthorization();
+app.UseAuthConfiguration();
 app.MapControllers();
 app.Run();

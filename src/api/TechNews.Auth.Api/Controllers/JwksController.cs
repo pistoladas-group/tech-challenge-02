@@ -30,7 +30,7 @@ public class JwksController : ControllerBase
     {
         var keys = _cryptographicKeyRetriever.GetLastKeys(2);
 
-        var result = new List<JsonWebKeyModel>();
+        var result = new JwksResponseModel();
 
         if (keys is null)
         {
@@ -41,7 +41,7 @@ public class JwksController : ControllerBase
         {
             var publicParameters = key.Instance.ExportParameters(false);
 
-            result.Add(new JsonWebKeyModel()
+            result.Keys.Add(new JsonWebKeyModel()
             {
                 KeyType = "RSA", // TODO: Deixar dinâmico
                 KeyId = key.Id.ToString(),
