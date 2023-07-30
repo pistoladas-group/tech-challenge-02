@@ -10,7 +10,9 @@
             "args": [],
             "cwd": "${workspaceFolder}/src/api/TechNews.Core.Api",
             "stopAtEntry": false,
-            "externalConsole": true,
+            "launchBrowser": {
+                "enabled": true
+            },
             "serverReadyAction": {
                 "action": "openExternally",
                 "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
@@ -18,7 +20,7 @@
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
-            },
+            }
         },
         {
             "name": "Tech News Auth API",
@@ -29,7 +31,9 @@
             "args": [],
             "cwd": "${workspaceFolder}/src/api/TechNews.Auth.Api",
             "stopAtEntry": false,
-            "externalConsole": true,
+            "launchBrowser": {
+                "enabled": true
+            },
             "serverReadyAction": {
                 "action": "openExternally",
                 "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
@@ -48,7 +52,9 @@
             "args": [],
             "cwd": "${workspaceFolder}/src/web/TechNews.Web",
             "stopAtEntry": false,
-            "externalConsole": true,
+            "launchBrowser": {
+                "enabled": true
+            },
             "serverReadyAction": {
                 "action": "openExternally",
                 "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
@@ -65,7 +71,6 @@
                 "Tech News API",
                 "Tech News Auth API",
                 "Tech News Web"
-
             ],
             "stopAll": true,
         }
