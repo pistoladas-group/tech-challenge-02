@@ -1,4 +1,13 @@
-﻿IF OBJECT_ID(N'[_AppliedMigrations]') IS NULL
+﻿USE TechNewsAuth
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+BEGIN TRANSACTION;
+GO
+
+IF OBJECT_ID(N'[_AppliedMigrations]') IS NULL
 BEGIN
     CREATE TABLE [_AppliedMigrations] (
         [MigrationId] nvarchar(150) NOT NULL,
@@ -6,9 +15,6 @@ BEGIN
         CONSTRAINT [PK__AppliedMigrations] PRIMARY KEY ([MigrationId])
     );
 END;
-GO
-
-BEGIN TRANSACTION;
 GO
 
 IF NOT EXISTS(SELECT * FROM [_AppliedMigrations] WHERE [MigrationId] = N'20230722221729_FirstMigration')

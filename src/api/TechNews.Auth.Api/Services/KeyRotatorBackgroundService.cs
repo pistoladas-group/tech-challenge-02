@@ -16,7 +16,7 @@ public class KeyRotatorBackgroundService : IHostedService, IDisposable
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        _timer = new Timer(ExecuteProcessAsync, null, TimeSpan.Zero, TimeSpan.FromMinutes(5)); //TODO: deixar configurável
+        _timer = new Timer(ExecuteProcess, null, TimeSpan.Zero, TimeSpan.FromMinutes(5)); //TODO: deixar configurável
         return Task.CompletedTask;
     }
 
@@ -34,7 +34,7 @@ public class KeyRotatorBackgroundService : IHostedService, IDisposable
         _timer?.Dispose();
     }
 
-    private async void ExecuteProcessAsync(object? state)
+    private void ExecuteProcess(object? state)
     {
         if (_isProcessing)
         {

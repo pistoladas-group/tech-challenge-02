@@ -2,6 +2,26 @@
 
 Work In Progress
 
+## Executando a aplicação
+É possível executar a aplicação realizando a configuração manualmente, ou utilizando Docker (recomendado).
+
+### Docker
+Para rodar localmente, é possível utilizar o Docker.  
+Abaixo o passo a passo para executar a aplicação localmente:
+- Realizar o clone do projeto na pasta desejada:
+    ```bash
+        git clone https://github.com/pistoladas-group/tech-challenge-02.git
+    ```
+- Configurar certificados para habilitar conexão via https:
+    ```bash
+        dotnet dev-certs https -ep "$env:USERPROFILE\.aspnet\https\technews.pfx"  -p OVmTv9lykb0)>m=wWcQaJ
+        dotnet dev-certs https --trust
+    ```
+- Utilizar o comando abaixo para subir a aplicação utilizando docker-compose:
+    ```bash
+        docker-compose -f docker-compose.debug.yml up --build
+    ```
+
 <!-- # TODO's
 - Descrever o fluxo OAuth implementado:
     - (talvez uns diagramas UML de sequência?)

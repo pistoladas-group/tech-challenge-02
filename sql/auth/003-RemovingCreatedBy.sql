@@ -1,4 +1,7 @@
-﻿BEGIN TRANSACTION;
+﻿USE TechNewsAuth
+GO
+
+BEGIN TRANSACTION;
 GO
 
 IF NOT EXISTS(SELECT * FROM [_AppliedMigrations] WHERE [MigrationId] = N'20230724233348_RemovingCreatedBy')
