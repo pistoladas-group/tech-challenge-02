@@ -2,11 +2,11 @@
 
 namespace TechNews.Web.Controllers;
 
-public class HomeController : Controller
+public class LoginController : Controller
 {
     private readonly ILogger<HomeController> _logger;
 
-    public HomeController(ILogger<HomeController> logger)
+    public LoginController(ILogger<HomeController> logger)
     {
         _logger = logger;
     }
