@@ -2,10 +2,9 @@
 
 namespace TechNews.Web.Controllers;
 
-public class LoginController : Controller
+public class AccountController : Controller
 {
-
-    public LoginController()
+    public AccountController()
     {
     }
 

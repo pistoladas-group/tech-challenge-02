@@ -1,4 +1,3 @@
-
 const configureElements = () => {
     let elements = document.querySelectorAll('.input100');
 
@@ -9,17 +8,46 @@ const configureElements = () => {
             } else {
                 this.classList.remove('has-val');
             }
+
+            if (validate(this) === false) {
+                showValidate(this);
+            }
+            else {
+                hideValidate(this);
+            }
+
+            if (this.name === 'pass') {
+                let confirmPass = document.getElementById('txtConfirmPassword');
+
+                if (validate(confirmPass) === false) {
+                    showValidate(confirmPass);
+                }
+                else {
+                    hideValidate(confirmPass);
+                }
+            }
+
+            if (this.name === 'confirm-pass') {
+                let pass = document.getElementById('txtPassword');
+
+                if (validate(pass) === false) {
+                    showValidate(pass);
+                }
+                else {
+                    hideValidate(pass);
+                }
+            }
         });
     });
 
-    var input = document.querySelectorAll('.validate-input .input100');
+    var inputs = document.querySelectorAll('.validate-input .input100');
 
     document.querySelector('.validate-form').addEventListener('submit', function (event) {
         var check = true;
 
-        for (var i = 0; i < input.length; i++) {
-            if (validate(input[i]) === false) {
-                showValidate(input[i]);
+        for (var i = 0; i < inputs.length; i++) {
+            if (validate(inputs[i]) === false) {
+                showValidate(inputs[i]);
                 check = false;
             }
         }
@@ -29,7 +57,7 @@ const configureElements = () => {
         }
     });
 
-    input.forEach(function (element) {
+    inputs.forEach(function (element) {
         element.addEventListener('focus', function () {
             hideValidate(this);
         });
@@ -57,15 +85,23 @@ const configureElements = () => {
 };
 
 const validate = (input) => {
-    if (input.getAttribute('type') === 'email' || input.getAttribute('name') === 'email') {
+    if (input.type === 'email' || input.name === 'email') {
         if (!input.value.trim().match(/^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{1,5}|[0-9]{1,3})(\]?)$/)) {
             return false;
         }
-    } else {
+    } else if (input.name === 'confirm-pass') {
+        let passwordInput = document.getElementById('txtPassword');
+        if (!(input.value.trim() === passwordInput.value.trim()) || input.value.trim() === '') {
+            return false;
+        }
+    }
+    else {
         if (input.value.trim() === '') {
             return false;
         }
     }
+
+    return true;
 };
 
 const showValidate = (input) => {
