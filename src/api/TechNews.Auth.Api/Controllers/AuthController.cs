@@ -114,8 +114,7 @@ public class AuthController : ControllerBase
 
         if (registeredUserResult?.UserName is null)
         {
-            //TODO: mensagem personalizada de erro!
-            return Problem();
+            return BadRequest(new ApiResponse(error: "User or password are invalid"));
         }
 
         var signInResult = await _signInManager.PasswordSignInAsync(registeredUserResult.UserName, user.Password, false, true);

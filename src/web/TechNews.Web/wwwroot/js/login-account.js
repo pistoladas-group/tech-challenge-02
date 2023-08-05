@@ -1,3 +1,10 @@
+const btnLoginElement = document.getElementById('btnLogin');
+const btnAccountElement = document.getElementById('btnAccount');
+const inputElements = document.querySelectorAll('.validate-input .input100');
+const emailElement = document.getElementById('txtEmail');
+const passwordElement = document.getElementById('txtPassword');
+const confirmPasswordElement = document.getElementById('txtConfirmPassword');
+
 const configureElements = () => {
     let elements = document.querySelectorAll('.input100');
 
@@ -16,82 +23,100 @@ const configureElements = () => {
                 hideValidate(this);
             }
 
-            if (this.name === 'pass') {
-                let confirmPass = document.getElementById('txtConfirmPassword');
-
-                if (validate(confirmPass) === false) {
-                    showValidate(confirmPass);
+            if (this.name === 'pass' && confirmPasswordElement !== null) {
+                if (validate(confirmPasswordElement) === false) {
+                    showValidate(confirmPasswordElement);
                 }
                 else {
-                    hideValidate(confirmPass);
+                    hideValidate(confirmPasswordElement);
                 }
             }
 
             if (this.name === 'confirm-pass') {
-                let pass = document.getElementById('txtPassword');
-
-                if (validate(pass) === false) {
-                    showValidate(pass);
+                if (validate(passwordElement) === false) {
+                    showValidate(passwordElement);
                 }
                 else {
-                    hideValidate(pass);
+                    hideValidate(passwordElement);
                 }
             }
         });
     });
 
-    var inputs = document.querySelectorAll('.validate-input .input100');
+    if (btnLoginElement != null) {
+        btnLoginElement.addEventListener('click', () => {
+            let check = true;
 
-    document.querySelector('.validate-form').addEventListener('submit', function (event) {
-        var check = true;
+            check = validateForm();
 
-        for (var i = 0; i < inputs.length; i++) {
-            if (validate(inputs[i]) === false) {
-                showValidate(inputs[i]);
-                check = false;
+            if (check) {
+                login();
             }
-        }
+        });
+    }
 
-        if (!check) {
-            event.preventDefault();
-        }
-    });
+    if (btnAccountElement != null) {
+        btnAccountElement.addEventListener('click', () => {
+            let check = true;
 
-    inputs.forEach(function (element) {
+            check = validateForm();
+
+            if (check) {
+                createAccount();
+            }
+        });
+    }
+
+    inputElements.forEach(function (element) {
         element.addEventListener('focus', function () {
             hideValidate(this);
         });
     });
 
-    var showPass = 0;
+    let showPass = false;
 
     document.querySelectorAll('.btn-show-pass').forEach(function (button) {
         button.addEventListener('click', function () {
-            var input = this.nextElementSibling;
+            let input = this.nextElementSibling;
 
-            if (showPass === 0) {
+            if (showPass === false) {
                 input.setAttribute('type', 'text');
                 this.querySelector('i').classList.remove('zmdi-eye');
                 this.querySelector('i').classList.add('zmdi-eye-off');
-                showPass = 1;
+                showPass = true;
             } else {
                 input.setAttribute('type', 'password');
                 this.querySelector('i').classList.add('zmdi-eye');
                 this.querySelector('i').classList.remove('zmdi-eye-off');
-                showPass = 0;
+                showPass = false;
             }
         });
     });
 };
 
+const validateForm = () => {
+    let check = true;
+
+    for (let i = 0; i < inputElements.length; i++) {
+        if (validate(inputElements[i]) === false) {
+            showValidate(inputElements[i]);
+            check = false;
+        }
+    }
+
+    return check;
+};
+
 const validate = (input) => {
+    if (input === null) {
+        return;
+    }
     if (input.type === 'email' || input.name === 'email') {
         if (!input.value.trim().match(/^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{1,5}|[0-9]{1,3})(\]?)$/)) {
             return false;
         }
     } else if (input.name === 'confirm-pass') {
-        let passwordInput = document.getElementById('txtPassword');
-        if (!(input.value.trim() === passwordInput.value.trim()) || input.value.trim() === '') {
+        if (!(input.value.trim() === passwordElement.value.trim()) || input.value.trim() === '') {
             return false;
         }
     }
@@ -105,14 +130,85 @@ const validate = (input) => {
 };
 
 const showValidate = (input) => {
-    var thisAlert = input.parentElement;
+    let thisAlert = input.parentElement;
     thisAlert.classList.add('alert-validate');
 };
 
 const hideValidate = (input) => {
-    var thisAlert = input.parentElement;
+    let thisAlert = input.parentElement;
     thisAlert.classList.remove('alert-validate');
 };
 
+const login = () => {
+    let data = {
+        email: emailElement.value,
+        password: passwordElement.value
+    };
+
+    fetch('/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+        .then(response => {
+            if (response.ok) {
+                window.location.href = '/home';
+            } else {
+                // Handle login failure
+            }
+        })
+        .then(data => {
+            let response = JSON.parse(data);
+            // TODO: Definir o que vai fazer...
+            // Acho que se o login funcionar, não tem que fazer nada
+            // porq vai redirecionar para a Home
+        })
+        .catch(error => {
+            // TODO: Definir o que vai fazer... mostrar um toaster talvez?
+            console.error('Error:', error);
+        });
+};
+
+const createAccount = () => {
+    let data = {
+        id: generateGuid(),
+        email: emailElement.value,
+        password: passwordElement.value,
+        repassword: confirmPasswordElement.value
+    };
+
+    fetch('/account', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+        .then(response => {
+            if (response.ok) {
+                window.location.href = '/home';
+            } else {
+                // Handle login failure
+            }
+        })
+        .then(data => {
+            let response = JSON.parse(data);
+            // TODO: Definir o que vai fazer...
+            // Acho que se o login funcionar, não tem que fazer nada
+            // porq vai redirecionar para a Home
+        })
+        .catch(error => {
+            // TODO: Definir o que vai fazer... mostrar um toaster talvez?
+            console.error('Error:', error);
+        });
+};
+
+const generateGuid = () => {
+    return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+        (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+    );
+};
 
 configureElements();

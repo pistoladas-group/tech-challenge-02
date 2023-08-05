@@ -3,18 +3,18 @@
 }
 
 @section Scripts {
-    <script src="~/js/login-account.js" asp-append-version="true"></script>
+  <script src="~/js/login-account.js" asp-append-version="true"></script>
 }
 
 <div class="limiter">
   <div class="container-login100">
     <div class="wrap-login100" style="width: 600px;">
-      <form class="login100-form validate-form">
+      <div class="login100-form validate-form">
         <span class="login100-form-title p-b-26" style="padding-bottom: 60px;">
-						Cadastre uma conta
-				</span>
+          Cadastre uma conta
+        </span>
         <div class="wrap-input100 validate-input" data-validate="E-mail inválido">
-          <input class="input100" type="text" name="email">
+          <input id="txtEmail" class="input100" type="text" name="email">
           <span class="focus-input100" data-placeholder="E-mail"></span>
         </div>
 
@@ -37,7 +37,7 @@
         <div class="container-login100-form-btn">
           <div class="wrap-login100-form-btn">
             <div class="login100-form-bgbtn"></div>
-            <button class="login100-form-btn">
+            <button id="btnAccount" class="login100-form-btn">
               Cadastrar
             </button>
           </div>
@@ -48,11 +48,11 @@
             Já possui uma conta?
           </span>
           <br>
-          <a class="txt2" href="Login">
+          <a class="txt2" href="login">
             Entrar
           </a>
         </div>
-      </form>
+      </div>
     </div>
   </div>
 </div>
