@@ -4,6 +4,8 @@ const inputElements = document.querySelectorAll('.validate-input .input100');
 const emailElement = document.getElementById('txtEmail');
 const passwordElement = document.getElementById('txtPassword');
 const confirmPasswordElement = document.getElementById('txtConfirmPassword');
+const divWarningAlertElement = document.getElementById('divWarningAlert');
+const divErrorAlertElement = document.getElementById('divErrorAlert');
 
 const configureElements = () => {
     let elements = document.querySelectorAll('.input100');
@@ -139,13 +141,36 @@ const hideValidate = (input) => {
     thisAlert.classList.remove('alert-validate');
 };
 
+const hideAlerts = () => {
+    divWarningAlertElement.classList.add('d-none');
+    divErrorAlertElement.classList.add('d-none');
+};
+
+const showWarningAlert = () => {
+    divWarningAlertElement.classList.remove('d-none');
+};
+
+const showErrorAlert = (message) => {
+    let defaultMessage = "Ocorreu um erro inesperado, por favor tente novamente ou contate o suporte";
+
+    if (message !== null && message !== undefined) {
+        defaultMessage = message;
+    }
+
+    divErrorAlertElement.textContent = defaultMessage;
+    divErrorAlertElement.classList.remove('d-none');
+};
+
 const login = () => {
+    PageLoading.show();
+    hideAlerts();
+
     let data = {
         email: emailElement.value,
         password: passwordElement.value
     };
 
-    fetch('/login', {
+    fetch('login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -153,21 +178,29 @@ const login = () => {
         body: JSON.stringify(data)
     })
         .then(response => {
-            if (response.ok) {
-                window.location.href = '/home';
-            } else {
-                // Handle login failure
+            PageLoading.hide();
+
+            if (response.status === 400) {
+                showErrorAlert("Usuário ou senha inválidos");
+                return;
             }
-        })
-        .then(data => {
-            let response = JSON.parse(data);
-            // TODO: Definir o que vai fazer...
-            // Acho que se o login funcionar, não tem que fazer nada
-            // porq vai redirecionar para a Home
+
+            if (response.status === 403) {
+                showWarningAlert();
+                return;
+            }
+
+            if (response.status === 500) {
+                showErrorAlert();
+                return;
+            }
+
+            // TODO: Passar username para mostrar um Olá!
+            window.location.href = '/home';
         })
         .catch(error => {
-            // TODO: Definir o que vai fazer... mostrar um toaster talvez?
-            console.error('Error:', error);
+            PageLoading.hide();
+            showErrorAlert();
         });
 };
 
@@ -179,7 +212,7 @@ const createAccount = () => {
         repassword: confirmPasswordElement.value
     };
 
-    fetch('/account', {
+    fetch('', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

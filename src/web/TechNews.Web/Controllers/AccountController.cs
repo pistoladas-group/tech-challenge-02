@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Net;
+using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using TechBox.Web.Configurations;
@@ -25,15 +26,7 @@ public class AccountController : Controller
     [HttpPost("")]
     public async Task<IActionResult> SignUpAsync([FromBody] SignUpViewModel model)
     {
-        var validationResult = ValidateRequest(model);
-
         // var result = new AppResult(); => TODO: Talvez renomear o model ApiResponse para AppResponse? Para usar aqui no front tb?
-
-        if (!validationResult)
-        {
-            // TODO: Retornar erro
-            return BadRequest();
-        }
 
         var client = _httpFactory.CreateClient();
 
@@ -61,9 +54,46 @@ public class AccountController : Controller
         return Ok();
     }
 
-    private bool ValidateRequest(SignUpViewModel model)
+    [HttpGet("login")]
+    public IActionResult Login()
     {
-        // TODO: Validar email e senha da mesma forma que faz na API
-        return true;
+        return View("Login");
+    }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> SignInAsync([FromBody] SignInViewModel model)
+    {
+        var client = _httpFactory.CreateClient();
+
+        var content = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
+        var apiResponse = await client.PostAsync($"{Environment.GetEnvironmentVariable(EnvironmentVariables.ApiBaseUrl)}/api/auth/user/login", content);
+
+        if (!apiResponse.IsSuccessStatusCode)
+        {
+            if (apiResponse.StatusCode == HttpStatusCode.InternalServerError ||
+                apiResponse.StatusCode == HttpStatusCode.Forbidden)
+            {
+                return StatusCode((int)apiResponse.StatusCode);
+            }
+
+            if (apiResponse.StatusCode == HttpStatusCode.BadRequest)
+            {
+                return BadRequest(new AppResponse(error: "Usuário ou senha inválidos"));
+            }
+
+            // TODO: Exception
+        }
+
+        // TODO: Avaliar melhor forma de guardar o token...
+        // para que sempre seja passado para a API de Core
+        // pegar username do JWT e passar pro JS...
+
+        return Ok(new AppResponse(data: "Mock"));
+    }
+
+    [HttpGet("logout")]
+    public IActionResult LogOut()
+    {
+        return NotFound();
     }
 }
