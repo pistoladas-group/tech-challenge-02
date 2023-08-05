@@ -1,5 +1,5 @@
 ﻿@{
-  ViewData["Title"] = "Entrar";
+  ViewData["Title"] = "Criar Conta";
 }
 
 @section Scripts {
@@ -11,7 +11,7 @@
     <div class="wrap-login100" style="width: 600px;">
       <div class="login100-form validate-form">
         <span class="login100-form-title p-b-26" style="padding-bottom: 60px;">
-          Entre em sua conta
+          Cadastre uma conta
         </span>
         <div class="wrap-input100 validate-input" data-validate="E-mail inválido">
           <input id="txtEmail" class="input100" type="text" name="email">
@@ -26,22 +26,30 @@
           <span class="focus-input100" data-placeholder="Senha"></span>
         </div>
 
+        <div class="wrap-input100 validate-input" data-validate="Senhas não conferem">
+          <span class="btn-show-pass">
+            <i class="zmdi zmdi-eye"></i>
+          </span>
+          <input id="txtConfirmPassword" class="input100" type="password" name="confirm-pass">
+          <span class="focus-input100" data-placeholder="Confirmar Senha"></span>
+        </div>
+
         <div class="container-login100-form-btn">
           <div class="wrap-login100-form-btn">
             <div class="login100-form-bgbtn"></div>
-            <button id="btnLogin" class="login100-form-btn">
-              Entrar
+            <button id="btnAccount" class="login100-form-btn">
+              Cadastrar
             </button>
           </div>
         </div>
 
         <div class="text-center p-t-115">
           <span class="txt1">
-            Não possui uma conta?
+            Já possui uma conta?
           </span>
           <br>
-          <a class="txt2" href="Account">
-            Criar Conta
+          <a class="txt2" href="login">
+            Entrar
           </a>
         </div>
       </div>

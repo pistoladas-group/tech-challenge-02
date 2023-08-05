@@ -7,11 +7,11 @@ using TechNews.Web.Models;
 namespace TechNews.Web.Controllers;
 
 [Route("[controller]")]
-public class LoginController : Controller
+public class AccountController : Controller
 {
     private readonly IHttpClientFactory _httpFactory;
 
-    public LoginController(IHttpClientFactory httpFactory)
+    public AccountController(IHttpClientFactory httpFactory)
     {
         _httpFactory = httpFactory;
     }
@@ -23,7 +23,7 @@ public class LoginController : Controller
     }
 
     [HttpPost("")]
-    public async Task<IActionResult> SignInAsync([FromBody] SignInViewModel model)
+    public async Task<IActionResult> SignUpAsync([FromBody] SignUpViewModel model)
     {
         var validationResult = ValidateRequest(model);
 
@@ -38,7 +38,7 @@ public class LoginController : Controller
         var client = _httpFactory.CreateClient();
 
         var content = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
-        var apiResponse = await client.PostAsync($"{Environment.GetEnvironmentVariable(EnvironmentVariables.ApiBaseUrl)}/api/auth/user/login", content);
+        var apiResponse = await client.PostAsync($"{Environment.GetEnvironmentVariable(EnvironmentVariables.ApiBaseUrl)}/api/auth/user", content);
 
         if (!apiResponse.IsSuccessStatusCode)
         {
@@ -61,7 +61,7 @@ public class LoginController : Controller
         return Ok();
     }
 
-    private bool ValidateRequest(SignInViewModel model)
+    private bool ValidateRequest(SignUpViewModel model)
     {
         // TODO: Validar email e senha da mesma forma que faz na API
         return true;
