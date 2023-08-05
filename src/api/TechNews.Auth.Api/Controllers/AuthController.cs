@@ -106,23 +106,22 @@ public class AuthController : ControllerBase
     [Produces("application/json")]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.Created)]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.BadRequest)]
-    [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.NotFound)]
+    [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.Forbidden)]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.InternalServerError)]
     public async Task<IActionResult> Login([FromBody] LoginRequestModel user)
     {
         var registeredUserResult = await _userManager.FindByEmailAsync(user.Email);
 
-        if (registeredUserResult?.UserName is null)
+        if (registeredUserResult is null || registeredUserResult?.UserName is null)
         {
-            //TODO: mensagem personalizada de erro!
-            return Problem();
+            return BadRequest(new ApiResponse(error: "User or password are invalid"));
         }
 
         var signInResult = await _signInManager.PasswordSignInAsync(registeredUserResult.UserName, user.Password, false, true);
 
         if (signInResult.IsLockedOut)
         {
-            return BadRequest(new ApiResponse(error: "User temporary blocked for invalid attempts"));
+            return StatusCode((int)HttpStatusCode.Forbidden, new ApiResponse(error: "User temporary blocked for invalid attempts"));
         }
 
         if (!signInResult.Succeeded)
@@ -132,8 +131,12 @@ public class AuthController : ControllerBase
 
         var claims = await GetUserClaims(registeredUserResult);
 
-        //TODO: Se token for nulo, retornar 500 Internal Server Error
         var token = GetToken(claims, registeredUserResult);
+
+        if (token is null)
+        {
+            return StatusCode((int)HttpStatusCode.InternalServerError, new ApiResponse(error: "There was an unexpected error with the application. Please contact support!"));
+        }
 
         return Ok(new ApiResponse(data: token));
     }

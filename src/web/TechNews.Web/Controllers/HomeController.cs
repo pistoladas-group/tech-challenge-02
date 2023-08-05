@@ -4,15 +4,15 @@ namespace TechNews.Web.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController()
     {
-        _logger = logger;
     }
 
     public IActionResult Index()
     {
+        // TODO: Está logado?: 
+        // SIM: Ir para a home mostrando o nome de usuário "Olá! lalal" e um botão de Sair
+        // NÃO: Ir para a home mostrando o botão de Entrar
         return View();
     }
 }
