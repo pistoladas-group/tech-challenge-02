@@ -1,7 +1,7 @@
 using System.Text;
 using dotenv.net;
 
-namespace TechBox.Web.Configurations;
+namespace TechNews.Web.Configurations;
 
 public static class EnvironmentVariables
 {

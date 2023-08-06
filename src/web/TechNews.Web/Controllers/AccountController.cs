@@ -2,7 +2,7 @@
 using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
-using TechBox.Web.Configurations;
+using TechNews.Web.Configurations;
 using TechNews.Web.Models;
 
 namespace TechNews.Web.Controllers;

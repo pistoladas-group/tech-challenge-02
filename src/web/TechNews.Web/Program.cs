@@ -1,4 +1,4 @@
-using TechBox.Web.Configurations;
+using TechNews.Web.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services
         .AddHttpClient()
         .AddEnvironmentVariables(builder.Environment)
-        .AddControllersWithViews();
+        .AddControllersWithViews(options => options.Filters.AddFilterConfiguration());
 
 var app = builder.Build();
 
