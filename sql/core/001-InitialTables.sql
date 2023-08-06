@@ -1,4 +1,7 @@
-﻿IF OBJECT_ID(N'[_AppliedMigrations]') IS NULL
+﻿USE TechNews
+GO
+
+IF OBJECT_ID(N'[_AppliedMigrations]') IS NULL
 BEGIN
     CREATE TABLE [_AppliedMigrations] (
         [MigrationId] nvarchar(150) NOT NULL,

@@ -1,4 +1,4 @@
-﻿use [TechNewsAuth]
+﻿USE TechNewsAuth
 GO
 
 GRANT INSERT ON [dbo].[UserRoles] TO [tech-news-auth]
