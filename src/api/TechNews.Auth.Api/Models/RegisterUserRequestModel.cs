@@ -15,7 +15,7 @@ public class RegisterUserRequestModel
     /// </summary>
     [Required(ErrorMessage = "The {0} field is mandatory")]
     [EmailAddress(ErrorMessage = "The {0} field is invalid")]
-    [MaxLength(320, ErrorMessage = "The {0} field must have a maximum length of {1} characters")]
+    [MaxLength(256, ErrorMessage = "The {0} field must have a maximum length of {1} characters")]
     public string Email { get; set; } = string.Empty;
 
     /// <summary>
@@ -23,6 +23,7 @@ public class RegisterUserRequestModel
     /// abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@
     /// </summary>
     [Required(ErrorMessage = "The {0} field is mandatory")]
+    [MaxLength(256, ErrorMessage = "The {0} field must have a maximum length of {1} characters")]
     public string UserName { get; set; } = string.Empty;
 
     /// <summary>

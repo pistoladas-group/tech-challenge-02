@@ -26,8 +26,6 @@ public class AccountController : Controller
     [HttpPost("")]
     public async Task<IActionResult> SignUpAsync([FromBody] SignUpViewModel model)
     {
-        // var result = new AppResult(); => TODO: Talvez renomear o model ApiResponse para AppResponse? Para usar aqui no front tb?
-
         var client = _httpFactory.CreateClient();
 
         var content = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
@@ -35,23 +33,24 @@ public class AccountController : Controller
 
         if (!apiResponse.IsSuccessStatusCode)
         {
-            // TODO: Retornar um JSON pro JS (result)
-            // para que seja possível avaliar:
-            // Internal Error (500):
-            //          - Mostrar mensagem de erro e pedir para contatar o suporte
-            // Bad Request (400):
-            //          - Mostrar mensagem "User or password are invalid"
-            // Locked Out?:
-            //          - Mostrar que usuário foi bloqueado e pedir contato com suporte
+            if (apiResponse.StatusCode == HttpStatusCode.BadRequest)
+            {
+                var errorResponse = await apiResponse.Content.ReadAsStringAsync();
 
-            return BadRequest();
+                // TODO: Culturizar as mensagens (traduzir)
+                var appResponse = JsonSerializer.Deserialize<AppResponseModel>(errorResponse, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+
+                return BadRequest(appResponse);
+            }
+
+            return StatusCode((int)HttpStatusCode.InternalServerError);
         }
 
-        // Login sucesso!!!
         // TODO: Avaliar melhor forma de guardar o token...
-        // para que sempre seja passado para a API, e retornar um Json aqui
+        // para que sempre seja passado para a API de Core
+        // pegar username do JWT e passar pro JS...
 
-        return Ok();
+        return Ok(new AppResponseModel(data: "Mock"));
     }
 
     [HttpGet("login")]
@@ -70,25 +69,25 @@ public class AccountController : Controller
 
         if (!apiResponse.IsSuccessStatusCode)
         {
+            if (apiResponse.StatusCode == HttpStatusCode.BadRequest)
+            {
+                return BadRequest(new AppResponseModel("Usuário ou senha inválidos"));
+            }
+
             if (apiResponse.StatusCode == HttpStatusCode.InternalServerError ||
                 apiResponse.StatusCode == HttpStatusCode.Forbidden)
             {
                 return StatusCode((int)apiResponse.StatusCode);
             }
 
-            if (apiResponse.StatusCode == HttpStatusCode.BadRequest)
-            {
-                return BadRequest(new AppResponse(error: "Usuário ou senha inválidos"));
-            }
-
-            // TODO: Exception
+            return StatusCode((int)HttpStatusCode.InternalServerError);
         }
 
         // TODO: Avaliar melhor forma de guardar o token...
         // para que sempre seja passado para a API de Core
         // pegar username do JWT e passar pro JS...
 
-        return Ok(new AppResponse(data: "Mock"));
+        return Ok(new AppResponseModel(data: "Mock"));
     }
 
     [HttpGet("logout")]

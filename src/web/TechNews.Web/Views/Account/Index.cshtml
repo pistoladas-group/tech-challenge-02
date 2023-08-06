@@ -14,8 +14,13 @@
           Cadastre uma conta
         </span>
         <div class="wrap-input100 validate-input" data-validate="E-mail inválido">
-          <input id="txtEmail" class="input100" type="text" name="email" maxlength="320">
+          <input id="txtEmail" class="input100" type="text" name="email" maxlength="256">
           <span class="focus-input100" data-placeholder="E-mail"></span>
+        </div>
+
+        <div class="wrap-input100 validate-input" data-validate="Nome de Usuário inválido">
+          <input id="txtUsername" class="input100" type="text" name="username" maxlength="256">
+          <span class="focus-input100" data-placeholder="Nome de Usuário"></span>
         </div>
 
         <div class="wrap-input100 validate-input" data-validate="Senha inválida">
@@ -32,6 +37,16 @@
           </span>
           <input id="txtConfirmPassword" class="input100" type="password" name="confirm-pass" maxlength="128">
           <span class="focus-input100" data-placeholder="Confirmar Senha"></span>
+        </div>
+
+        <div id="divWarningAlert" class="alert alert-warning d-flex align-items-center d-none" role="alert">
+          <div>
+            Ocorreu um erro inesperado, por favor tente novamente ou contate o suporte
+          </div>
+        </div>
+
+        <div id="divErrorAlert" class="alert alert-danger d-none" role="alert">
+          Ocorreu um erro inesperado, por favor tente novamente ou contate o suporte
         </div>
 
         <div class="container-login100-form-btn">

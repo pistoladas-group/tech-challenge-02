@@ -1,32 +1,29 @@
 namespace TechNews.Web.Models;
 
-//TODO: Talvez fazer uma classe só?
-// ApiResponse x AppResponse lá no shared
-public class AppResponse
+public class AppResponseModel
 {
-    public bool Succeeded { get; private set; }
+    public bool Succeeded { get; init; }
     public object? Data { get; init; }
     public List<string>? Errors { get; init; }
 
-    public AppResponse()
+    public AppResponseModel()
     {
-        Succeeded = true;
     }
 
-    public AppResponse(object? data)
+    public AppResponseModel(object? data)
     {
         Succeeded = true;
         Data = data;
     }
 
-    public AppResponse(string error)
+    public AppResponseModel(string error)
     {
         Succeeded = false;
         Errors ??= new List<string>();
         Errors.Add(error);
     }
 
-    public AppResponse(List<string> errors)
+    public AppResponseModel(List<string> errors)
     {
         Succeeded = false;
         Errors = errors;

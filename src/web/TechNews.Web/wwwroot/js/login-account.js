@@ -2,6 +2,7 @@ const btnLoginElement = document.getElementById('btnLogin');
 const btnAccountElement = document.getElementById('btnAccount');
 const inputElements = document.querySelectorAll('.validate-input .input100');
 const emailElement = document.getElementById('txtEmail');
+const usernameElement = document.getElementById('txtUsername');
 const passwordElement = document.getElementById('txtPassword');
 const confirmPasswordElement = document.getElementById('txtConfirmPassword');
 const divWarningAlertElement = document.getElementById('divWarningAlert');
@@ -146,8 +147,37 @@ const hideAlerts = () => {
     divErrorAlertElement.classList.add('d-none');
 };
 
-const showWarningAlert = () => {
+const showWarningAlert = (errors) => {
+    divWarningAlertElement.classList.add('d-none');
+
+    if (errors !== null && errors !== undefined) {
+        let joinedErrors = '';
+
+        errors.forEach((error) => {
+            joinedErrors = joinedErrors + '<br>' + error;
+        });
+
+        divWarningAlertElement.innerHTML = joinedErrors.substring(4);;
+    }
+
     divWarningAlertElement.classList.remove('d-none');
+};
+
+const showWarningErrors = (fileName, errors) => {
+    warningAlertElement.classList.add('d-none');
+
+    let clonedItem = warningItemCloneElement.cloneNode(true);
+    let joinedErrors = '';
+
+    errors.forEach((error) => {
+        joinedErrors = joinedErrors + ', ' + error;
+        listWarningElement.appendChild(clonedItem);
+        clonedItem.classList.remove('d-none');
+    });
+
+    clonedItem.innerHTML = '<b>' + fileName + '</b>: ' + joinedErrors.substring(2);
+
+    warningAlertElement.classList.remove('d-none');
 };
 
 const showErrorAlert = (message) => {
@@ -205,9 +235,12 @@ const login = () => {
 };
 
 const createAccount = () => {
+    PageLoading.show();
+
     let data = {
         id: generateGuid(),
         email: emailElement.value,
+        username: usernameElement.value,
         password: passwordElement.value,
         repassword: confirmPasswordElement.value
     };
@@ -220,21 +253,37 @@ const createAccount = () => {
         body: JSON.stringify(data)
     })
         .then(response => {
-            if (response.ok) {
-                window.location.href = '/home';
-            } else {
-                // Handle login failure
-            }
+            return response.json().then(data => {
+                return {
+                    data,
+                    status: response.status
+                };
+            });
         })
-        .then(data => {
-            let response = JSON.parse(data);
-            // TODO: Definir o que vai fazer...
-            // Acho que se o login funcionar, não tem que fazer nada
-            // porq vai redirecionar para a Home
+        .then(response => {
+            PageLoading.hide();
+
+            if (response.status === 400) {
+                showWarningAlert(response.data.errors);
+                return;
+            }
+
+            if (response.status === 403) {
+                showWarningAlert();
+                return;
+            }
+
+            if (response.status === 500) {
+                showErrorAlert();
+                return;
+            }
+
+            // TODO: Passar username para mostrar um Olá!
+            window.location.href = '/home';
         })
         .catch(error => {
-            // TODO: Definir o que vai fazer... mostrar um toaster talvez?
-            console.error('Error:', error);
+            PageLoading.hide();
+            showErrorAlert();
         });
 };
 
