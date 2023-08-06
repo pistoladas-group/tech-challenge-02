@@ -23,14 +23,31 @@ Abaixo o passo a passo para executar a aplicação localmente:
     ```
 
 <!-- # TODO's
-- Descrever o fluxo OAuth implementado:
+
+## Arquitetura ##
+- Descrever estilos e padrões de arquiteturas escolhidos (camadas com REST... etc)
+- Descrever um Modelo Entidade Relacional do banco (pelo menos do Core talvez?)
+
+## Frameworks, pacotes terceiros, ORM's, etc ##
+
+## Segurança ##
+
+- Descrever o fluxo geral implementado (seguindo o OAuth2 no backend):
     - (talvez uns diagramas UML de sequência?)
     - Descrever a rotação da chave e o Key Vault (citar a necessidade de um serviço de instância única)
     - Descrever a assinatura do JWT com chave assimétrica
     - Descrever o JWKS
     - Descrever a validação do JWT com a chave pública
+    - Descrever a autenticação por cookie/sessão no Web (Front)
 
-- Descrever como é feito o deploy 
+- Descrever alguns possíveis ataques e como a aplicação está segura contra isso:
+    - SQL Injection => (ORM's, parametrização por procedures, etc..)
+    - Brute Force => (Lockout, Hash de senhas pelo Identity)
+    - Cross Site Scripting (XSS) => (Boas validações nas controllers, HTTP Only Cookie, etc)
+    - Cross Site Request Forgery (CSRF) => (Validação de Anti Forgery Token, CORS (habilitado por padrão pelo ASP .NET Core))
+    - Man in the Middle => (HTTPS, HTTPS Redirection, HSTS)
+
+## CI/CD, como é feito o deploy, etc ##
     - ARM Template
     - Github Actions
     - Database scripts ou Migrations
@@ -39,5 +56,4 @@ Abaixo o passo a passo para executar a aplicação localmente:
     - ACR & ACI
     - etc...
 
-- Descrever estilos e padrões de arquiteturas escolhidos (camadas com REST... etc)
-- Descrever um Modelo Entidade Relacional do banco (pelo menos do Core talvez?) -->
+-->

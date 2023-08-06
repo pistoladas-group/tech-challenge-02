@@ -1,5 +1,5 @@
-const btnLoginElement = document.getElementById('btnLogin');
-const btnAccountElement = document.getElementById('btnAccount');
+const frmLoginElement = document.getElementById('frmLogin');
+const frmAccountElement = document.getElementById('frmAccount');
 const inputElements = document.querySelectorAll('.validate-input .input100');
 const emailElement = document.getElementById('txtEmail');
 const usernameElement = document.getElementById('txtUsername');
@@ -46,8 +46,10 @@ const configureElements = () => {
         });
     });
 
-    if (btnLoginElement != null) {
-        btnLoginElement.addEventListener('click', () => {
+    if (frmLoginElement !== null && frmLoginElement !== undefined) {
+        frmLoginElement.addEventListener("submit", (event) => {
+            event.preventDefault();
+
             let check = true;
 
             check = validateForm();
@@ -58,8 +60,10 @@ const configureElements = () => {
         });
     }
 
-    if (btnAccountElement != null) {
-        btnAccountElement.addEventListener('click', () => {
+    if (frmAccountElement !== null && frmAccountElement !== undefined) {
+        frmAccountElement.addEventListener("submit", (event) => {
+            event.preventDefault();
+
             let check = true;
 
             check = validateForm();
@@ -203,7 +207,8 @@ const login = () => {
     fetch('login', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'RequestVerificationToken': document.getElementsByName('__RequestVerificationToken')[0].value
         },
         body: JSON.stringify(data)
     })
@@ -248,7 +253,8 @@ const createAccount = () => {
     fetch('', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'RequestVerificationToken': document.getElementsByName('__RequestVerificationToken')[0].value
         },
         body: JSON.stringify(data)
     })
