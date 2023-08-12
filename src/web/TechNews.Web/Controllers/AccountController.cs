@@ -1,12 +1,18 @@
-﻿using System.Net;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Net;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TechNews.Web.Configurations;
 using TechNews.Web.Models;
 
 namespace TechNews.Web.Controllers;
 
+[Authorize]
 [Route("[controller]")]
 public class AccountController : Controller
 {
@@ -17,12 +23,14 @@ public class AccountController : Controller
         _httpFactory = httpFactory;
     }
 
+    [AllowAnonymous]
     [HttpGet("")]
     public IActionResult Index()
     {
         return View();
     }
 
+    [AllowAnonymous]
     [HttpPost("")]
     public async Task<IActionResult> SignUpAsync([FromBody] SignUpViewModel model)
     {
@@ -38,27 +46,37 @@ public class AccountController : Controller
                 var errorResponse = await apiResponse.Content.ReadAsStringAsync();
 
                 // TODO: Culturizar as mensagens (traduzir)
-                var appResponse = JsonSerializer.Deserialize<AppResponseModel>(errorResponse, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+                var response = JsonSerializer.Deserialize<AppResponseModel>(errorResponse, new JsonSerializerOptions(JsonSerializerDefaults.Web));
 
-                return BadRequest(appResponse);
+                return BadRequest(response);
             }
 
             return StatusCode((int)HttpStatusCode.InternalServerError);
         }
 
-        // TODO: Avaliar melhor forma de guardar o token...
-        // para que sempre seja passado para a API de Core
-        // pegar username do JWT e passar pro JS...
+        var responseString = await apiResponse.Content.ReadAsStringAsync();
+        var appResponse = JsonSerializer.Deserialize<AppResponseModel>(responseString, new JsonSerializerOptions(JsonSerializerDefaults.Web));
 
-        return Ok(new AppResponseModel(data: "Mock"));
+        var token = GetTokenFromString(appResponse?.Data?.ToString());
+
+        if (token is null)
+        {
+            return StatusCode((int)HttpStatusCode.InternalServerError);
+        }
+
+        await AuthenticateUserByTokenAsync(token);
+
+        return Ok();
     }
 
+    [AllowAnonymous]
     [HttpGet("login")]
     public IActionResult Login()
     {
         return View("Login");
     }
 
+    [AllowAnonymous]
     [HttpPost("login")]
     public async Task<IActionResult> SignInAsync([FromBody] SignInViewModel model)
     {
@@ -83,16 +101,53 @@ public class AccountController : Controller
             return StatusCode((int)HttpStatusCode.InternalServerError);
         }
 
-        // TODO: Avaliar melhor forma de guardar o token...
-        // para que sempre seja passado para a API de Core
-        // pegar username do JWT e passar pro JS...
+        var responseString = await apiResponse.Content.ReadAsStringAsync();
+        var appResponse = JsonSerializer.Deserialize<AppResponseModel>(responseString, new JsonSerializerOptions(JsonSerializerDefaults.Web));
 
-        return Ok(new AppResponseModel(data: "Mock"));
+        var token = GetTokenFromString(appResponse?.Data?.ToString());
+
+        if (token is null)
+        {
+            return StatusCode((int)HttpStatusCode.InternalServerError);
+        }
+
+        await AuthenticateUserByTokenAsync(token);
+
+        return Ok();
     }
 
     [HttpGet("logout")]
-    public IActionResult LogOut()
+    public async Task<IActionResult> LogOutAsync()
     {
-        return NotFound();
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+        return Redirect("Login");
+    }
+
+    private static JwtSecurityToken? GetTokenFromString(string? jwtToken)
+    {
+        return new JwtSecurityTokenHandler().ReadToken(jwtToken) as JwtSecurityToken;
+    }
+
+    private async Task AuthenticateUserByTokenAsync(JwtSecurityToken token)
+    {
+        var claimsIdentity = GetClaimsByJwt(token);
+
+        var authProperties = new AuthenticationProperties
+        {
+            ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(20), //TODO: Tirar hardcode
+            IsPersistent = true
+        };
+
+        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
+    }
+
+    private static ClaimsIdentity GetClaimsByJwt(JwtSecurityToken token)
+    {
+        var claims = new List<Claim>();
+        claims.AddRange(token.Claims);
+        claims.Add(new Claim("JWT", "Access Token JWT"));
+
+        return new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
     }
 }

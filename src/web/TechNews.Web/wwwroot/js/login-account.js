@@ -230,8 +230,7 @@ const login = () => {
                 return;
             }
 
-            // TODO: Passar username para mostrar um Olá!
-            window.location.href = '/home';
+            window.location.href = '/news';
         })
         .catch(error => {
             PageLoading.hide();
@@ -284,8 +283,7 @@ const createAccount = () => {
                 return;
             }
 
-            // TODO: Passar username para mostrar um Olá!
-            window.location.href = '/home';
+            window.location.href = '/news';
         })
         .catch(error => {
             PageLoading.hide();

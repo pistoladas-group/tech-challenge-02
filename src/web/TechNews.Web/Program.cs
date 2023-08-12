@@ -5,6 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services
         .AddHttpClient()
+        .AddAuthConfiguration()
         .AddEnvironmentVariables(builder.Environment)
         .AddControllersWithViews(options => options.Filters.AddFilterConfiguration());
 
@@ -16,7 +17,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization();
+app.UseAuthConfiguration();
 
 app.MapControllerRoute(
     name: "default",

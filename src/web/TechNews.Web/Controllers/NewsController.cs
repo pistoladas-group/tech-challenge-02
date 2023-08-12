@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TechNews.Web.Models;
 
 namespace TechNews.Web.Controllers;
 
+[Authorize]
 public class NewsController : Controller
 {
     private readonly ILogger<NewsController> _logger;

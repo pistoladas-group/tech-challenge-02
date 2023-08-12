@@ -1,18 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace TechNews.Web.Controllers;
 
+[Authorize]
 public class HomeController : Controller
 {
     public HomeController()
     {
     }
 
+    [AllowAnonymous]
     public IActionResult Index()
     {
-        // TODO: Está logado?: 
-        // SIM: Ir para a home mostrando o nome de usuário "Olá! lalal" e um botão de Sair
-        // NÃO: Ir para a home mostrando o botão de Entrar
         return View();
     }
 }
