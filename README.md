@@ -14,7 +14,7 @@ Abaixo o passo a passo para executar a aplicação localmente:
     ```
 - Configurar certificados para habilitar conexão via https:
     ```bash
-        dotnet dev-certs https -ep "$env:USERPROFILE\.aspnet\https\technews.pfx"  -p OVmTv9lykb0)>m=wWcQaJ
+        dotnet dev-certs https -ep "$env:USERPROFILE\.aspnet\https\technews.pfx"  -p "OVmTv9lykb0)>m=wWcQaJ"
         dotnet dev-certs https --trust
     ```
 - Utilizar o comando abaixo para subir a aplicação utilizando docker-compose:
@@ -48,12 +48,16 @@ Abaixo o passo a passo para executar a aplicação localmente:
     - Man in the Middle => (HTTPS, HTTPS Redirection, HSTS)
 
 ## CI/CD, como é feito o deploy, etc ##
-    - ARM Template
+    - Descrever o que criamos de recursos através do ARM Template:
+        - Container Registry *obrigatório (para guardar as imagens das app's )
+        - Container Instance (rodar as imagens das app's em si)
+        - Blob Storage
+        - Key Vault
+        - SQL Database
     - Github Actions
     - Database scripts ou Migrations
     - Automatização
     - Estratégia de deploy e rollback (faremos por deployment slots usando app services ou containers usando ACI?)
-    - ACR & ACI
     - etc...
 
 -->
