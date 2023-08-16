@@ -13,8 +13,8 @@ public class AuthorConfiguration : IEntityTypeConfiguration<Author>
         builder.Property(p => p.Id).HasColumnType("UNIQUEIDENTIFIER").HasColumnName("Id").IsRequired();
         builder.Property(p => p.CreatedAt).HasColumnType("DATETIME").HasColumnName("CreatedAt").IsRequired();
         builder.Property(p => p.IsDeleted).HasColumnType("BIT").HasColumnName("IsDeleted").IsRequired();
-        builder.Property(p => p.Name).HasColumnType("VARCHAR(100)").IsRequired();
-        builder.Property(p => p.Email).HasColumnType("VARCHAR(100)").IsRequired();
+        builder.Property(p => p.Name).HasColumnType("VARCHAR(100)").HasColumnName("Name").IsRequired();
+        builder.Property(p => p.Email).HasColumnType("VARCHAR(100)").HasColumnName("Email").IsRequired();
         builder.HasQueryFilter(p => !p.IsDeleted);
     }
 }
