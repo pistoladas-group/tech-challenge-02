@@ -38,12 +38,13 @@ jobs:
       with:
         creds: ${{secrets.AZURE_CREDENTIALS}}
 
-    - name: Display Current Directory
-      run: |
-          echo "Current directory: $(pwd)"
-          
-    - name: List Files in Directory
-      run: ls -la
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+        
+    - name: Restore Dependencies
+      run: dotnet restore
 
     - name: Push TechNews Auth API
       uses: azure/cli@v1
