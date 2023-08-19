@@ -37,6 +37,5 @@ jobs:
       with:
         creds: ${{secrets.AZURE_CREDENTIALS}}
     - run: |
-        az account show
-        az group list
+        az acr build --image technews-auth-api:v1 --registry techchallenge02 --file Dockerfile .
     
