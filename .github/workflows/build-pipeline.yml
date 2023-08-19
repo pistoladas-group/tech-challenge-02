@@ -14,30 +14,6 @@ jobs:
     - name: Clone Repo
       uses: actions/checkout@v3
       
-  #  - name: Setup .NET
-  #    uses: actions/setup-dotnet@v3
-  #    with:
-  #      dotnet-version: 6.0.x
-        
-  #  - name: Restore Dependencies
-  #    run: dotnet restore
-      
-  #  - name: Build Apps
-  #    run: dotnet build --no-restore
-  
-  push-images:
-    runs-on: ubuntu-latest
-    needs: [build-apps]
-    steps:
-    #- name: Obtendo o código fonte
-    #  uses: actions/checkout@v3.5.3
-    
-    - name: Azure Login
-      id: login
-      uses: Azure/login@v1.4.6
-      with:
-        creds: ${{secrets.AZURE_CREDENTIALS}}
-
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
@@ -45,6 +21,22 @@ jobs:
         
     - name: Restore Dependencies
       run: dotnet restore
+      
+    - name: Build Apps
+      run: dotnet build --no-restore
+  
+  push-images:
+    runs-on: ubuntu-latest
+    needs: [build-apps]
+    steps:
+    - name: Clone Repo
+      uses: actions/checkout@v3.5.3
+    
+    - name: Azure Login
+      id: login
+      uses: Azure/login@v1.4.6
+      with:
+        creds: ${{secrets.AZURE_CREDENTIALS}}
 
     - name: Push TechNews Auth API
       uses: azure/cli@v1
