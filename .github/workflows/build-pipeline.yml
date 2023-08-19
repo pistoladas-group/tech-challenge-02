@@ -1,4 +1,4 @@
-name: .NET
+name: Build Pipelines
 
 on:
   push:
@@ -25,7 +25,7 @@ jobs:
     - name: Build Apps
       run: dotnet build --no-restore
   
-  push-images:
+  push-auth-image:
     runs-on: ubuntu-latest
     needs: [build-apps]
     steps:
@@ -44,7 +44,20 @@ jobs:
           azcliversion: latest
           inlineScript: |
             az acr build --image technews-auth-api:v1 --registry techchallenge02 --file ./src/api/TechNews.Auth.Api/Dockerfile .
-            
+  
+  push-core-image:
+    runs-on: ubuntu-latest
+    needs: [build-apps]
+    steps:
+    - name: Clone Repo
+      uses: actions/checkout@v3.5.3
+    
+    - name: Azure Login
+      id: login
+      uses: Azure/login@v1.4.6
+      with:
+        creds: ${{secrets.AZURE_CREDENTIALS}}
+        
     - name: Push TechNews Core API
       uses: azure/cli@v1
       with:
@@ -52,6 +65,19 @@ jobs:
           inlineScript: |
             az acr build --image technews-core-api:v1 --registry techchallenge02 --file ./src/api/TechNews.Core.Api/Dockerfile .
 
+  push-web-image:
+    runs-on: ubuntu-latest
+    needs: [build-apps]
+    steps:
+    - name: Clone Repo
+      uses: actions/checkout@v3.5.3
+
+    - name: Azure Login
+      id: login
+      uses: Azure/login@v1.4.6
+      with:
+        creds: ${{secrets.AZURE_CREDENTIALS}}
+        
     - name: Push TechNews Web
       uses: azure/cli@v1
       with:
