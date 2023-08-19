@@ -43,7 +43,7 @@ jobs:
           echo "Current directory: $(pwd)"
           
     - name: List Files in Directory
-      run: ls -la ./home/runner/work/tech-challenge-02/tech-challenge-02
+      run: ls -la home/runner/work/tech-challenge-02/tech-challenge-02
 
     - name: Push TechNews Auth API
       uses: azure/cli@v1
