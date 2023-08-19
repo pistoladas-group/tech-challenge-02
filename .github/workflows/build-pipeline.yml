@@ -8,7 +8,22 @@ on:
   workflow_dispatch:
 
 jobs:
-  
+  # build-apps:
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #  - name: Clone Repo
+  #    uses: actions/checkout@v3
+      
+  #  - name: Setup .NET
+  #    uses: actions/setup-dotnet@v3
+  #    with:
+  #      dotnet-version: 6.0.x
+        
+  #  - name: Restore Dependencies
+  #    run: dotnet restore
+      
+  #  - name: Build Apps
+  #    run: dotnet build --no-restore
   
   push-images:
     runs-on: ubuntu-latest
@@ -22,6 +37,13 @@ jobs:
       uses: Azure/login@v1.4.6
       with:
         creds: ${{secrets.AZURE_CREDENTIALS}}
+
+    - name: Display Current Directory
+      run: |
+          echo "Current directory: $(pwd)"
+          
+    - name: List Files in Directory
+      run: ls -la ./path/to/directory
 
     - name: Push TechNews Auth API
       uses: azure/cli@v1
