@@ -27,10 +27,7 @@ jobs:
   
   push-auth-image:
     runs-on: ubuntu-latest
-    needs: [build-apps]
-    strategy:
-      fail-fast: false
-      max-retries: [1] 
+    needs: [build-apps] 
     steps:
     - name: Clone Repo
       uses: actions/checkout@v3.5.3
@@ -44,16 +41,15 @@ jobs:
     - name: Push TechNews Auth API
       uses: azure/cli@v1
       with:
-          azcliversion: latest
-          inlineScript: |
+        max_attempts: 1
+        retry_on: error
+        azcliversion: latest
+        inlineScript: |
             az acr build --image technews-auth-api:v1 --registry acrtechnews --file ./src/api/TechNews.Auth.Api/Dockerfile .
   
   push-core-image:
     runs-on: ubuntu-latest
     needs: [build-apps]
-    strategy:
-      fail-fast: false
-      max-retries: [1]
     steps:
     - name: Clone Repo
       uses: actions/checkout@v3.5.3
@@ -67,6 +63,8 @@ jobs:
     - name: Push TechNews Core API
       uses: azure/cli@v1
       with:
+          max_attempts: 1
+          retry_on: error
           azcliversion: latest
           inlineScript: |
             az acr build --image technews-core-api:v1 --registry acrtechnews --file ./src/api/TechNews.Core.Api/Dockerfile .
@@ -74,9 +72,6 @@ jobs:
   push-web-image:
     runs-on: ubuntu-latest
     needs: [build-apps]
-    strategy:
-      fail-fast: false
-      max-retries: [1]
     steps:
     - name: Clone Repo
       uses: actions/checkout@v3.5.3
@@ -90,6 +85,8 @@ jobs:
     - name: Push TechNews Web
       uses: azure/cli@v1
       with:
+          max_attempts: 1
+          retry_on: error
           azcliversion: latest
           inlineScript: |
             az acr build --image technews-web:v1 --registry acrtechnews --file ./src/web/TechNews.Web/Dockerfile .
