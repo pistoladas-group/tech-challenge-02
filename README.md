@@ -68,7 +68,6 @@
     - [Web App](#web-app)
     - [Core API](#core-api)
     - [Auth API (Authorization Server)](#auth-api-authorization-server)
-
 - [Segurança](#segurança)
 - [CI / CD](#ci-cd)
 - [Executando a aplicação](#executando-a-aplicação)

@@ -28,6 +28,10 @@ jobs:
   push-auth-image:
     runs-on: ubuntu-latest
     needs: [build-apps]
+    strategy:
+      fail-fast: false
+      matrix:
+        max-retries: [1] 
     steps:
     - name: Clone Repo
       uses: actions/checkout@v3.5.3
@@ -48,6 +52,10 @@ jobs:
   push-core-image:
     runs-on: ubuntu-latest
     needs: [build-apps]
+    strategy:
+      fail-fast: false
+      matrix:
+        max-retries: [1]
     steps:
     - name: Clone Repo
       uses: actions/checkout@v3.5.3
@@ -68,6 +76,10 @@ jobs:
   push-web-image:
     runs-on: ubuntu-latest
     needs: [build-apps]
+    strategy:
+      fail-fast: false
+      matrix:
+        max-retries: [1]
     steps:
     - name: Clone Repo
       uses: actions/checkout@v3.5.3
