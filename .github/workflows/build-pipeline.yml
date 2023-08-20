@@ -46,7 +46,7 @@ jobs:
       with:
           azcliversion: latest
           inlineScript: |
-            az acr build --image technews-auth-api:v1 --registry techchallenge02 --file ./src/api/TechNews.Auth.Api/Dockerfile .
+            az acr build --image technews-auth-api:v1 --registry acrtechnews --file ./src/api/TechNews.Auth.Api/Dockerfile .
   
   push-core-image:
     runs-on: ubuntu-latest
@@ -69,7 +69,7 @@ jobs:
       with:
           azcliversion: latest
           inlineScript: |
-            az acr build --image technews-core-api:v1 --registry techchallenge02 --file ./src/api/TechNews.Core.Api/Dockerfile .
+            az acr build --image technews-core-api:v1 --registry acrtechnews --file ./src/api/TechNews.Core.Api/Dockerfile .
 
   push-web-image:
     runs-on: ubuntu-latest
@@ -92,4 +92,4 @@ jobs:
       with:
           azcliversion: latest
           inlineScript: |
-            az acr build --image technews-web:v1 --registry techchallenge02 --file ./src/web/TechNews.Web/Dockerfile .
+            az acr build --image technews-web:v1 --registry acrtechnews --file ./src/web/TechNews.Web/Dockerfile .
