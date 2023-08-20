@@ -30,8 +30,7 @@ jobs:
     needs: [build-apps]
     strategy:
       fail-fast: false
-      matrix:
-        max-retries: [1] 
+      max-retries: [1] 
     steps:
     - name: Clone Repo
       uses: actions/checkout@v3.5.3
@@ -54,8 +53,7 @@ jobs:
     needs: [build-apps]
     strategy:
       fail-fast: false
-      matrix:
-        max-retries: [1]
+      max-retries: [1]
     steps:
     - name: Clone Repo
       uses: actions/checkout@v3.5.3
@@ -78,8 +76,7 @@ jobs:
     needs: [build-apps]
     strategy:
       fail-fast: false
-      matrix:
-        max-retries: [1]
+      max-retries: [1]
     steps:
     - name: Clone Repo
       uses: actions/checkout@v3.5.3
