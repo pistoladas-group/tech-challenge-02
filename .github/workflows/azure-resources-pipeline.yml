@@ -7,6 +7,9 @@ jobs:
   deploy-resources:
     runs-on: ubuntu-latest
     steps:
+    - name: Clone Repo
+      uses: actions/checkout@v3
+
     - name: Azure Login
       id: login
       uses: Azure/login@v1.4.6
@@ -23,6 +26,9 @@ jobs:
   deploy-auth-database:
     runs-on: ubuntu-latest
     steps:
+    - name: Clone Repo
+      uses: actions/checkout@v3
+
     - name: Azure Login
       id: login
       uses: Azure/login@v1.4.6
@@ -39,6 +45,9 @@ jobs:
   deploy-core-database:
     runs-on: ubuntu-latest
     steps:
+    - name: Clone Repo
+      uses: actions/checkout@v3
+      
     - name: Azure Login
       id: login
       uses: Azure/login@v1.4.6
