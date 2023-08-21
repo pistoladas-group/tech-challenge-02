@@ -16,23 +16,23 @@
         {
             "type": "Microsoft.KeyVault/vaults",
             "apiVersion": "2021-10-01",
-            "name": "[parameters('containerRegistry').name]",
-            "location": "[parameters('containerRegistry').location]",
+            "name": "[parameters('keyVault').name]",
+            "location": "[parameters('keyVault').location]",
             "properties": {
-                "enabledForDeployment": "[parameters('containerRegistry').enabledForDeployment]",
-                "enabledForTemplateDeployment": "[parameters('containerRegistry').enabledForTemplateDeployment]",
-                "enabledForDiskEncryption": "[parameters('containerRegistry').enabledForDiskEncryption]",
-                "enableRbacAuthorization": "[parameters('containerRegistry').enableRbacAuthorization]",
-                "accessPolicies": "[parameters('containerRegistry').accessPolicies]",
-                "tenantId": "[parameters('containerRegistry').tenant]",
+                "enabledForDeployment": "[parameters('keyVault').enabledForDeployment]",
+                "enabledForTemplateDeployment": "[parameters('keyVault').enabledForTemplateDeployment]",
+                "enabledForDiskEncryption": "[parameters('keyVault').enabledForDiskEncryption]",
+                "enableRbacAuthorization": "[parameters('keyVault').enableRbacAuthorization]",
+                "accessPolicies": "[parameters('keyVault').accessPolicies]",
+                "tenantId": "[parameters('keyVault').tenant]",
                 "sku": {
-                    "name": "[parameters('containerRegistry').sku]",
+                    "name": "[parameters('keyVault').sku]",
                     "family": "A"
                 },
-                "publicNetworkAccess": "[parameters('containerRegistry').publicNetworkAccess]",
-                "enableSoftDelete": "[parameters('containerRegistry').enableSoftDelete]",
-                "softDeleteRetentionInDays": "[parameters('containerRegistry').softDeleteRetentionInDays]",
-                "networkAcls": "[parameters('containerRegistry').networkAcls]"
+                "publicNetworkAccess": "[parameters('keyVault').publicNetworkAccess]",
+                "enableSoftDelete": "[parameters('keyVault').enableSoftDelete]",
+                "softDeleteRetentionInDays": "[parameters('keyVault').softDeleteRetentionInDays]",
+                "networkAcls": "[parameters('keyVault').networkAcls]"
             },
             "tags": {},
             "dependsOn": []
