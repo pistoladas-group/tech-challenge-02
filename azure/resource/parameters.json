@@ -2,6 +2,31 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "keyVaultName": {
+            "value": "string"
+        },
+        "keyVault": {
+            "value": {
+                "name": "npvaulttechnews",
+                "location": "brazilsouth",
+                "sku": "Standard",
+                "accessPolicies": [],
+                "tenant": "11dbbfe2-89b8-4549-be10-cec364e59551",
+                "enabledForDeployment": false,
+                "enabledForTemplateDeployment": true,
+                "enabledForDiskEncryption": false,
+                "enableRbacAuthorization": true,
+                "publicNetworkAccess": "Enabled",
+                "enableSoftDelete": true,
+                "softDeleteRetentionInDays": 90,
+                "networkAcls": {
+                    "defaultAction": "allow",
+                    "bypass": "AzureServices",
+                    "ipRules": [],
+                    "virtualNetworkRules": []
+                }
+            }
+        },
         "containerRegistry": {
             "value": {
                 "registryName": "acrtechnews",
