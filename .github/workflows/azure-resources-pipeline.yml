@@ -16,27 +16,15 @@ jobs:
       with:
         creds: ${{secrets.AZURE_CREDENTIALS}}
 
-    - name: Deploy ARM Template
+    - name: Deploy Resources Template
       uses: azure/arm-deploy@v1
       with:
         subscriptionId: 5d17a1d6-e7cf-4fb4-978f-701807e9dd06
         resourceGroupName: rg-tech-challenge-02
         template: ./azure/resource/template.json
-        parameters: ./azure/resource/parameters.json 
-  
-  deploy-auth-database:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Clone Repo
-      uses: actions/checkout@v3
+        parameters: ./azure/resource/parameters.json
 
-    - name: Azure Login
-      id: login
-      uses: Azure/login@v1.4.6
-      with:
-        creds: ${{secrets.AZURE_CREDENTIALS}}
-      
-    - name: Deploy ARM Template
+    - name: Deploy TechNewsAuth Database Template
       uses: azure/arm-deploy@v1
       with:
         subscriptionId: 5d17a1d6-e7cf-4fb4-978f-701807e9dd06
@@ -44,19 +32,7 @@ jobs:
         template: ./azure/database/template.json
         parameters: ./azure/database/parameters-TechNewsAuth.json
 
-  deploy-core-database:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Clone Repo
-      uses: actions/checkout@v3
-
-    - name: Azure Login
-      id: login
-      uses: Azure/login@v1.4.6
-      with:
-        creds: ${{secrets.AZURE_CREDENTIALS}}
-      
-    - name: Deploy ARM Template
+    - name: Deploy TechNews Database Template
       uses: azure/arm-deploy@v1
       with:
         subscriptionId: 5d17a1d6-e7cf-4fb4-978f-701807e9dd06
