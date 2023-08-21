@@ -6,6 +6,8 @@ on:
 jobs:
   deploy-resources:
     runs-on: ubuntu-latest
+    env:
+      VAULT_NAME: npvaulttechnews
     steps:
     - name: Clone Repo
       uses: actions/checkout@v3
@@ -29,9 +31,9 @@ jobs:
       with:
         azcliversion: latest
         inlineScript: |
-          az keyvault secret set --vault-name npvaulttechnews --name administratorLogin --value ${{secrets.ADMIN_LOGIN}}
-          az keyvault secret set --vault-name npvaulttechnews --name administratorLoginPassword --value ${{secrets.ADMIN_PASSWORD}}
-          az keyvault secret set --vault-name npvaulttechnews --name clientIpValue --value ${{secrets.CLIENT_IP}}
+          az keyvault secret set --vault-name $VAULT_NAME --name administratorLogin --value ${{secrets.ADMIN_LOGIN}}
+          az keyvault secret set --vault-name $VAULT_NAME --name administratorLoginPassword --value ${{secrets.ADMIN_PASSWORD}}
+          az keyvault secret set --vault-name $VAULT_NAME --name clientIpValue --value ${{secrets.CLIENT_IP}}
 
     - name: Deploy TechNewsAuth Database Template
       uses: azure/arm-deploy@v1
