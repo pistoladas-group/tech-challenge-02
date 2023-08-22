@@ -107,7 +107,7 @@ Esta é uma visão geral da arquitetura do TechNews.
 
 A concepção da aplicação foi fundamentada no padrão arquitetural MVC (Model View Controller), sendo implementada por meio do ASP.NET Core.
 No âmbito do negócio, sua responsabilidade é requisitar os recursos restritos disponibilizados pela API de notícias e, posteriormente, apresentando esses elementos aos usuários.
-Quanto à segurança, a aplicação assume a responsabilidade de transmitir os dados referentes à criação de usuários ou as credenciais de acesso ao Authorization Server.
+Quanto à segurança, a aplicação assume a responsabilidade de transmitir os dados referentes à criação de usuários ou as credenciais de acesso ao Authorization Server. Mais detalhes em [Segurança](#segurança)
 
 
 Caso as credenciais estiverem corretas, a aplicação irá receber um JWT assinado (JWS - Json Web Signature) e irá autenticar o usuário via cookie. Então, para cada requisição feita à API de notícias o mesmo JWT será enviado pelo header.
@@ -125,11 +125,15 @@ Work in Progress
 ### Auth API (Authorization Server)
 
 Foi adotado o estilo arquitetural REST (Representational State Transfer) com camadas, utilizando ASP.NET Core.
-Although some features that could be useful in a REST API are not presented in this first version, this API can be considered RESTful according to Leonard Richardson in his book RESTful Web APIs. 2013. O'Reilly Media.
+A camada de <b>Filtros</b> lidam com exceções e tratamento de Model State inválidos.
+A camada de <b>Controllers</b> direciona o fluxo das requisições. É responsável por expor os parâmetros públicos da chave assimétrica, realizar chamadas ao Identity para autenticação/autorização do usuário e criar o JWT utilizando as classes de Serviços.
+A camada de <b>Data</b> se integra com classes do Identity (User e Role) e com o Entity Framework para mapeamento de dados.
+A camada de <b>Services</b> possui serviços com responsabilidades diversas como: gerenciar (buscar ou persistir) a chave privada no Azure Key Vault, assinar um token digitalmente com criptografia RSA e a criação da chave assimétrica através de criptografia RSA.
+O <b>Background Service</b> que vemos abaixo é uma parte dos serviços. Ele constitui uma solução simples para a rotação da chave privada que gera os tokens. O ideal é possuir uma solução mais robusta, consistindo em uma aplicação que gerencia a rotação da chave para todas as instâncias de aplicações que a utilizam, de preferência sendo uma única instância, para evitar concorrência na geração da chave.
 
 <p align="center">
   <a href="">
-    <img src=".github\images\api-architecture.png" alt="api-architecture">
+    <img src=".github\images\architecture-auth.png" alt="api-architecture">
   </a>
 </p>
 
