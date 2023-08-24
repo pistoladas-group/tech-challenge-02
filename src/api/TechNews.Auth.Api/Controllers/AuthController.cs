@@ -114,6 +114,17 @@ public class AuthController : ControllerBase
 
         if (registeredUserResult is null || registeredUserResult?.UserName is null)
         {
+            // OAuth2 TODO: devolver o tipo (invalid_request) correto
+
+            // HTTP/1.1 400 Bad Request
+            // Headers em todas as responses
+            // Cache-Control: no-store
+            // Pragma: no-cache
+
+            // Body
+            // {
+            // "error":"invalid_request"
+            // }
             return BadRequest(new ApiResponse(error: "User or password are invalid"));
         }
 
@@ -138,6 +149,19 @@ public class AuthController : ControllerBase
             return StatusCode((int)HttpStatusCode.InternalServerError, new ApiResponse(error: "There was an unexpected error with the application. Please contact support!"));
         }
 
+
+        // OAuth2 TODO: Return this
+
+        // Headers em todas as responses
+        // Cache-Control: no-store
+        // Pragma: no-cache
+
+        // Body
+        // {
+        //     "access_token":"2YotnFZFEjr1zCsicMWpAA",
+        //     "token_type":"example",
+        //     "expires_in":3600
+        // }
         return Ok(new ApiResponse(data: token));
     }
 

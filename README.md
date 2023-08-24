@@ -1,28 +1,5 @@
 <!-- # TODO's
 
-## Arquitetura ##
-- Descrever estilos e padrões de arquiteturas escolhidos (camadas com REST... etc)
-- Descrever um Modelo Entidade Relacional do banco (pelo menos do Core talvez?)
-
-## Frameworks, pacotes terceiros, ORM's, etc ##
-
-## Segurança ##
-
-- Descrever o fluxo geral implementado (seguindo o OAuth2 no backend):
-    - (talvez uns diagramas UML de sequência?)
-    - Descrever a rotação da chave e o Key Vault (citar a necessidade de um serviço de instância única)
-    - Descrever a assinatura do JWT com chave assimétrica
-    - Descrever o JWKS
-    - Descrever a validação do JWT com a chave pública
-    - Descrever a autenticação por cookie/sessão no Web (Front)
-
-- Descrever alguns possíveis ataques e como a aplicação está segura contra isso:
-    - SQL Injection => (ORM's, parametrização por procedures, etc..)
-    - Brute Force => (Lockout, Hash de senhas pelo Identity)
-    - Cross Site Scripting (XSS) => (Boas validações nas controllers, HTTP Only Cookie, etc)
-    - Cross Site Request Forgery (CSRF) => (Validação de Anti Forgery Token, CORS (habilitado por padrão pelo ASP .NET Core))
-    - Man in the Middle => (HTTPS, HTTPS Redirection, HSTS)
-
 ## CI/CD, como é feito o deploy, etc ##
     - Descrever o que criamos de recursos através do ARM Template:
         - Container Registry *obrigatório (para guardar as imagens das app's )
@@ -75,7 +52,7 @@
 
 
 ## Sobre
-Este projeto foi criado para atender os requisitos do projeto Tech Challenge da [ Faculdade de Tecnologia - FIAP](https://postech.fiap.com.br/?gclid=Cj0KCQjwnf-kBhCnARIsAFlg49228y9z3y6lf_mWZEekgcxZRZBDavxtRT-zAUNs33TZOJtXpGVMNlAaAue5EALw_wcB).<br>
+Este projeto foi criado para atender os requisitos do projeto Tech Challenge da [Faculdade de Tecnologia - FIAP](https://postech.fiap.com.br/?gclid=Cj0KCQjwnf-kBhCnARIsAFlg49228y9z3y6lf_mWZEekgcxZRZBDavxtRT-zAUNs33TZOJtXpGVMNlAaAue5EALw_wcB).<br>
 O sistema do TechNews consiste em três aplicações: 
 - Uma aplicação Web App MVC que exibe as notícias do blog.
 - Uma API de gerenciamento das notícias (requer autenticação OAuth2).
@@ -129,7 +106,7 @@ A camada de <b>Filtros</b> lidam com exceções e tratamento de Model State inv�
 A camada de <b>Controllers</b> direciona o fluxo das requisições. É responsável por expor os parâmetros públicos da chave assimétrica, realizar chamadas ao Identity para autenticação/autorização do usuário e criar o JWT utilizando as classes de Serviços.
 A camada de <b>Data</b> se integra com classes do Identity (User e Role) e com o Entity Framework para mapeamento de dados.
 A camada de <b>Services</b> possui serviços com responsabilidades diversas como: gerenciar (buscar ou persistir) a chave privada no Azure Key Vault, assinar um token digitalmente com criptografia RSA e a criação da chave assimétrica através de criptografia RSA.
-O <b>Background Service</b> que vemos abaixo é uma parte dos serviços. Ele constitui uma solução simples para a rotação da chave privada que gera os tokens. O ideal é possuir uma solução mais robusta, consistindo em uma aplicação que gerencia a rotação da chave para todas as instâncias de aplicações que a utilizam, de preferência sendo uma única instância, para evitar concorrência na geração da chave.
+O <b>Background Service</b> que vemos abaixo é uma parte da camada de serviços. Ele constitui uma solução simples para a rotação da chave privada que gera os tokens. O ideal é possuir uma solução mais robusta, consistindo em uma aplicação que gerencia a rotação da chave para todas as instâncias de aplicações que a utilizam.
 
 <p align="center">
   <a href="">
@@ -139,7 +116,60 @@ O <b>Background Service</b> que vemos abaixo é uma parte dos serviços. Ele con
 
 ## Segurança
 
+A orquestração do fluxo de autenticação do Tech News foi fundamentada na documentação do [OAuth 2.0](https://datatracker.ietf.org/doc/html/rfc6749) bem como na documentação do [JWT para Access Tokens OAuth 2.0](https://datatracker.ietf.org/doc/html/rfc9068).
+
+<p align="center">
+  <a href="">
+    <img src=".github\images\auth-flow-01.png" alt="api-architecture">
+  </a>
+</p>
+
+<p align="center">
+  <a href="">
+    <img src=".github\images\auth-flow-02.png" alt="api-architecture">
+  </a>
+</p>
+
+<p align="center">
+  <a href="">
+    <img src=".github\images\auth-flow-02-01.png" alt="api-architecture">
+  </a>
+</p>
+
+<p align="center">
+  <a href="">
+    <img src=".github\images\auth-flow-03.png" alt="api-architecture">
+  </a>
+</p>
+
+<p align="center">
+  <a href="">
+    <img src=".github\images\auth-flow-04.png" alt="api-architecture">
+  </a>
+</p>
+
+
+
+#### Rotação das Chaves
+Para a rotação da chave privada optamos por uma solução simples para o tech challenge, um <b>background service</b>. O ideal seria uma solução mais robusta, consistindo em uma aplicação que gerencia a rotação da chave para todas as instâncias de aplicações que a utilizam. 
+O serviço rotaciona a chave privada a cada X dias (parametrizado por variável). 
+Utiliza-se o algoritmo de criptografia assimétrica [RSA](https://pt.wikipedia.org/wiki/RSA_(sistema_criptogr%C3%A1fico)) para a criação de uma nova chave. Os parâmetros privados da chave são persistidos no Azure Key Vault, enquanto os parâmetros públicos são encapsulados em um JWK (Json Web Key) e expostos em uma URL com uma lista de JWKS (Json Web Key Set). Por exemplo <b>url-api/jwks</b>. 
+São esses parâmetros públicos disponíveis nessa URL que as API's de recursos protegidos irão validar o JWT recebido.
+
+#### Prevenção contra possíveis ataques
+
 Work in Progress
+
+<!-- ## Segurança ##
+
+- Descrever alguns possíveis ataques e como a aplicação está segura contra isso:
+    - SQL Injection => (ORM's, parametrização por procedures, etc..)
+    - Brute Force => (Lockout, Hash de senhas pelo Identity)
+    - Cross Site Scripting (XSS) => (Boas validações nas controllers, HTTP Only Cookie, etc)
+    - Cross Site Request Forgery (CSRF) => (Validação de Anti Forgery Token, CORS (habilitado por padrão pelo ASP .NET Core))
+    - Man in the Middle => (HTTPS, HTTPS Redirection, HSTS) -->
+
+
 
 ## CI / CD
 
