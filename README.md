@@ -29,32 +29,34 @@
     - [Core API](#core-api)
     - [Auth API (Authorization Server)](#auth-api-authorization-server)
 - [Segurança](#segurança)
-- [CI / CD](#ci-cd)
+    - [Rotação das Chaves](#rotação-das-chaves)
+    - [Prevenção contra possíveis ataques](#prevenção-contra-possíveis-ataques)
+- [CI / CD](#ci--cd)
 - [Executando a aplicação](#executando-a-aplicação)
     - [Docker](#docker)
 
 
-## Sobre
+# Sobre
 Este projeto foi criado para atender os requisitos do projeto Tech Challenge da [Faculdade de Tecnologia - FIAP](https://postech.fiap.com.br/?gclid=Cj0KCQjwnf-kBhCnARIsAFlg49228y9z3y6lf_mWZEekgcxZRZBDavxtRT-zAUNs33TZOJtXpGVMNlAaAue5EALw_wcB).<br>
 O sistema do TechNews consiste em três aplicações: 
 - Uma aplicação Web App MVC que exibe as notícias do blog.
 - Uma API de gerenciamento das notícias (requer autenticação OAuth2).
 - Uma API dedicada ao gerenciamento, autenticação e autorização dos usuários.
 
-## Tecnologias
+# Tecnologias
 
 | Web App | API's | ORM | Database
 | --- | --- | --- | --- |
 | [![bootstrap-version](https://img.shields.io/badge/Bootstrap-5.0.2-purple)](https://getbootstrap.com/)<br>[![fontawesome-version](https://img.shields.io/badge/Font_Awesome-6.4.0-yellow)](https://fontawesome.com/)<br>[![aspnetcore-version](https://img.shields.io/badge/ASP.NET_Core_MVC-7.0-blue)](https://learn.microsoft.com/pt-br/aspnet/core/introduction-to-aspnet-core?view=aspnetcore-7.0)| [![aspnetcore-version](https://img.shields.io/badge/ASP.NET_Core-7.0-blue)](https://learn.microsoft.com/pt-br/aspnet/core/introduction-to-aspnet-core?view=aspnetcore-7.0) | [![dapper-version](https://img.shields.io/badge/EF_Core-7.0-red)](https://learn.microsoft.com/en-us/ef/core/) | ![database](https://img.shields.io/badge/SQL_Server-gray)
 
-## Suporte ao Browser
+# Suporte ao Browser
 
 | <img src="https://user-images.githubusercontent.com/1215767/34348387-a2e64588-ea4d-11e7-8267-a43365103afe.png" alt="Chrome" width="16px" height="16px" /> Chrome | <img src="https://user-images.githubusercontent.com/1215767/34348590-250b3ca2-ea4f-11e7-9efb-da953359321f.png" alt="IE" width="16px" height="16px" /> Internet Explorer | <img src="https://user-images.githubusercontent.com/1215767/34348380-93e77ae8-ea4d-11e7-8696-9a989ddbbbf5.png" alt="Edge" width="16px" height="16px" /> Edge | <img src="https://user-images.githubusercontent.com/1215767/34348394-a981f892-ea4d-11e7-9156-d128d58386b9.png" alt="Safari" width="16px" height="16px" /> Safari | <img src="https://user-images.githubusercontent.com/1215767/34348383-9e7ed492-ea4d-11e7-910c-03b39d52f496.png" alt="Firefox" width="16px" height="16px" /> Firefox |
 | :---------: | :---------: | :---------: | :---------: | :---------: |
 | Yes | 11+ | Yes | Yes | Yes |
 
 
-## Arquitetura
+# Arquitetura
 Esta é uma visão geral da arquitetura do TechNews.
 
 <p align="center">
@@ -63,7 +65,7 @@ Esta é uma visão geral da arquitetura do TechNews.
   </a>
 </p>
 
-### Web App
+## Web App
 
 A concepção da aplicação foi fundamentada no padrão arquitetural MVC (Model View Controller), sendo implementada por meio do ASP.NET Core.
 
@@ -80,11 +82,11 @@ Caso as credenciais estiverem corretas, a aplicação irá receber um JWT assina
   </a>
 </p>
 
-### Core API
+## Core API
 
 Work in Progress
 
-### Auth API (Authorization Server)
+## Auth API (Authorization Server)
 
 Foi adotado o estilo arquitetural REST (Representational State Transfer) com camadas, utilizando ASP.NET Core.
 
@@ -104,7 +106,7 @@ O <b>Background Service</b> que vemos abaixo é uma parte da camada de serviços
   </a>
 </p>
 
-## Segurança
+# Segurança
 
 A orquestração do fluxo de autenticação do Tech News foi fundamentada na documentação do [OAuth 2.0](https://datatracker.ietf.org/doc/html/rfc6749) bem como na documentação do [JWT para Access Tokens OAuth 2.0](https://datatracker.ietf.org/doc/html/rfc9068).
 
@@ -140,7 +142,7 @@ A orquestração do fluxo de autenticação do Tech News foi fundamentada na doc
 
 
 
-#### Rotação das Chaves
+## Rotação das Chaves
 Para a rotação da chave privada optamos por uma solução simples para o tech challenge, um <b>background service</b>. O ideal seria uma solução mais robusta, consistindo em uma aplicação que gerencia a rotação da chave para todas as instâncias de aplicações que a utilizam. 
 
 O serviço rotaciona a chave privada a cada X dias (parametrizado por variável). Utiliza-se o algoritmo de criptografia assimétrica [RSA](https://pt.wikipedia.org/wiki/RSA_(sistema_criptogr%C3%A1fico)) para a criação de uma nova chave. 
@@ -149,7 +151,7 @@ Os parâmetros privados da chave são persistidos no Azure Key Vault, enquanto o
 
 São esses parâmetros públicos disponíveis nessa URL que as API's de recursos protegidos irão validar o JWT recebido.
 
-#### Prevenção contra possíveis ataques
+## Prevenção contra possíveis ataques
 
 Algumas camadas adicionais de segurança foram implementadas para evitar alguns dos ataques mais comuns.
 
@@ -162,7 +164,7 @@ Algumas camadas adicionais de segurança foram implementadas para evitar alguns 
 | <p style="width:260px; text-align: left;">Man in the Middle</p> | <p style="text-align: left;">Habilitado HSTS para informar ao cliente que somente requisições HTTPS são aceitas e redirecionamento de protocolos HTTP para HTTPS.</p> |
 
 
-## CI / CD
+# CI / CD
 
 O CI / CD do TechNews consiste em três pipelines: <b>Azure Resources</b>, <b>Build</b> e <b>Deploy</b>.
 
@@ -174,10 +176,10 @@ O pipeline de <b>Deploy</b> assume o papel de Entrega Contínua (CD), criando as
 
 <!-- TODO: - Database scripts ou Migrations -->
 
-## Executando a aplicação
+# Executando a aplicação
 É possível executar a aplicação realizando a configuração manualmente, ou utilizando Docker (recomendado).
 
-### Docker
+## Docker
 Para rodar localmente, é possível utilizar o Docker.  
 Abaixo o passo a passo para executar a aplicação localmente:
 - Realizar o clone do projeto na pasta desejada:
