@@ -43,9 +43,12 @@ jobs:
           resourceType="Microsoft.Compute/virtualMachines" # Replace with the actual resource type
 
           result=$(az resource show --resource-group "rg-tech-challenge-02" --name "acrtechnews" --resource-type "Microsoft.ContainerRegistry/registries" --output json)
-          if [[ $? -eq 0 ]]; then
+          
+          if [[ "${result}" == *"ResourceNotFound"* ]]; then
+            echo "The resource does not exist."
             echo "::set-output name=resource_exists::true"
           else
+            echo "The resource exists."
             echo "::set-output name=resource_exists::false"
           fi
   
