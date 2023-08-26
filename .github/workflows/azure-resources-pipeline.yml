@@ -11,7 +11,7 @@ on:
 jobs:
   deploy-resources:
     runs-on: ubuntu-latest
-    if: github.event.inputs.job_to_run == 'create'
+    if: github.event.inputs.create_or_delete == 'create'
     env:
       VAULT_NAME: npvaulttechnews
     steps:
@@ -59,7 +59,7 @@ jobs:
 
   delete-resources:
     runs-on: ubuntu-latest
-    if: github.event.inputs.job_to_run == 'delete'
+    if: github.event.inputs.create_or_delete == 'delete'
     steps:
     - name: Azure Login
       id: login
