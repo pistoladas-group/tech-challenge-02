@@ -44,12 +44,12 @@ jobs:
 
           result=$(az resource show --resource-group "rg-tech-challenge-02" --name "acrtechnews" --resource-type "Microsoft.ContainerRegistry/registries" --output json)
           
-          if [[ "${result}" == *"ResourceNotFound"* ]]; then
-            echo "The resource does not exist."
+          if [[ $? -eq 0 ]]; then
+            echo "The resource exists."
             echo "::set-output name=resource_exists::true"
           else
-            echo "The resource exists."
-            echo "::set-output name=resource_exists::false"
+              echo "The resource does not exist."
+              echo "::set-output name=resource_exists::false"
           fi
   
   push-auth-image:
