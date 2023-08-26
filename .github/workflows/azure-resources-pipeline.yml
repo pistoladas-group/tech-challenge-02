@@ -68,8 +68,8 @@ jobs:
         creds: ${{secrets.AZURE_CREDENTIALS}}
     
     - name: Delete Resources
-        uses: azure/cli@v1
-        with:
-          azcliversion: latest
-          inlineScript: |
-            az group delete --name tech-challenge-02 --yes --no-wait
+      uses: azure/cli@v1
+      with:
+        azcliversion: latest
+        inlineScript: |
+          az group delete --name tech-challenge-02 --yes --no-wait
