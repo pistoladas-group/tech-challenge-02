@@ -38,14 +38,19 @@ jobs:
       - name: Check Resource Existence
         id: check-resource
         run: |
-          result=$(az resource show --resource-group "rg-tech-challenge-02" --name "acrtechnews" --resource-type "Microsoft.ContainerRegistry/registries" --output json 2>/dev/null)
+          az resource show --resource-group "rg-tech-challenge-02" --name "acrtechnews" --resource-type "Microsoft.ContainerRegistry/registries" --output json
+          exit_code=$?
           
-          if [[ $? -eq 0 ]]; then
+          # Process the exit code
+          if [[ $exit_code -eq 0 ]]; then
             echo "The resource exists."
             echo "::set-output name=resource_exists::true"
-          else
+          elif [[ $exit_code -eq 3 ]]; then
             echo "The resource does not exist."
             echo "::set-output name=resource_exists::false"
+          else
+            echo "An error occurred: Exit code $exit_code"
+            exit 1
           fi
   
   push-auth-image:
