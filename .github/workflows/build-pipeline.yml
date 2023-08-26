@@ -38,11 +38,12 @@ jobs:
       - name: Check Resource Existence
         id: check-resource
         run: |
-          # az resource show --resource-group "rg-tech-challenge-02" --name "acrtechnews" --resource-type "Microsoft.ContainerRegistry/registries" --output json || true
           if az resource show --resource-group "rg-tech-challenge-02" --name "acrtechnews" --resource-type "Microsoft.ContainerRegistry/registries" --output none; then
-             echo "keyvault exists"
+             echo "resource exists"
+             echo "::set-output name=resource_exists::true"
           else
-             echo "keyvault doesn't exist"
+             echo "resource does not exist"
+             echo "::set-output name=resource_exists::false"
           fi
   push-auth-image:
     runs-on: ubuntu-latest
