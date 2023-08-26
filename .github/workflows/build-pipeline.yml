@@ -38,18 +38,14 @@ jobs:
       - name: Check Resource Existence
         id: check-resource
         run: |
-          resourceGroup="your-resource-group-name"
-          resourceName="your-resource-name"
-          resourceType="Microsoft.Compute/virtualMachines" # Replace with the actual resource type
-
-          result=$(az resource show --resource-group "rg-tech-challenge-02" --name "acrtechnews" --resource-type "Microsoft.ContainerRegistry/registries" --output json)
+          result=$(az resource show --resource-group "rg-tech-challenge-02" --name "acrtechnews" --resource-type "Microsoft.ContainerRegistry/registries" --output json 2>/dev/null)
           
           if [[ $? -eq 0 ]]; then
             echo "The resource exists."
             echo "::set-output name=resource_exists::true"
           else
-              echo "The resource does not exist."
-              echo "::set-output name=resource_exists::false"
+            echo "The resource does not exist."
+            echo "::set-output name=resource_exists::false"
           fi
   
   push-auth-image:
