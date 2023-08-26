@@ -60,7 +60,7 @@ jobs:
   delete-resources:
     runs-on: ubuntu-latest
     if: github.event.inputs.job_to_run == 'delete'
-
+    steps:
     - name: Azure Login
       id: login
       uses: Azure/login@v1.4.6
