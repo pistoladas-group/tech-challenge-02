@@ -2,7 +2,7 @@ using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TechNews.Common.Library;
+using TechNews.Common.Library.Models;
 using TechNews.Core.Api.Data;
 
 namespace TechNews.Core.Api.Controllers;

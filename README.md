@@ -158,7 +158,7 @@ Algumas camadas adicionais de segurança foram implementadas para evitar alguns 
 | Nome | Prevenção Implementada|
 | :---------: | :---------: |
 | <p style="width:260px; text-align: left;">SQL Injection</p> | <p style="text-align: left;">Qualquer acesso aos dados é feito através de procedures parametrizadas e do ORM.</p> |
-| <p style="width:260px; text-align: left;">Brute Force</p> | <p style="text-align: left;">Lockout após X tentativas erradas de autenticação e Hash de senhas utilizando algoritmo Bcrypt.</p> |
+| <p style="width:260px; text-align: left;">Brute Force</p> | <p style="text-align: left;">Lockout após X tentativas erradas de autenticação, Hash de senhas utilizando algoritmo Bcrypt e formato rígido de senha (mínimo: 8 caracteres, 1 dígito, 1 minúscula, 1 maiúscula e 1 caracter especial)</p> |
 | <p style="width:260px; text-align: left;">Cross Site Scripting (XSS)</p> | <p style="text-align: left;">Validações server-side do que recebemos do browser, cookies de autenticação como HTTP Only e criptografado para evitar acessá-los por script.</p> |
 | <p style="width:260px; text-align: left;">Cross Site Request Forgery (CSRF)</p> | <p style="text-align: left;">Validação de Anti Forgery Token e CORS (habilitado por padrão pelo ASP .NET Core).</p> |
 | <p style="width:260px; text-align: left;">Man in the Middle</p> | <p style="text-align: left;">Habilitado HSTS para informar ao cliente que somente requisições HTTPS são aceitas e redirecionamento de protocolos HTTP para HTTPS.</p> |

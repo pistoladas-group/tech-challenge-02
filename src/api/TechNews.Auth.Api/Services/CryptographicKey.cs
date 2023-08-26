@@ -1,3 +1,5 @@
+using TechNews.Auth.Api.Configurations;
+
 namespace TechNews.Auth.Api.Services;
 
 public class CryptographicKey
@@ -17,11 +19,11 @@ public class CryptographicKey
     {
         var today = DateTime.UtcNow;
 
-        if (Instance is null) //TODO: verificar forma de validar se instância é valida
+        if (Instance is null)
         {
             return false;
         }
 
-        return (today - CreationDate).TotalDays < 30; //TODO: configurar e validar
+        return (today - CreationDate).TotalDays < EnvironmentVariables.KeyExpirationInDays;
     }
 }

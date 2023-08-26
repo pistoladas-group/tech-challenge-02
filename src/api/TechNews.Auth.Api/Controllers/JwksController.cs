@@ -2,8 +2,8 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using TechNews.Auth.Api.Models;
-using TechNews.Common.Library;
 using TechNews.Auth.Api.Services;
+using TechNews.Common.Library.Models;
 
 namespace TechNews.Auth.Api.Controllers;
 
@@ -43,7 +43,7 @@ public class JwksController : ControllerBase
 
             result.Keys.Add(new JsonWebKeyModel()
             {
-                KeyType = "RSA", // TODO: Deixar dinâmico
+                KeyType = "RSA",
                 KeyId = key.Id.ToString(),
                 Algorithm = "RS256",
                 Use = "sig",

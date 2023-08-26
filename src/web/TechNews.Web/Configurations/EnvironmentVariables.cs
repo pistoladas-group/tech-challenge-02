@@ -5,7 +5,8 @@ namespace TechNews.Web.Configurations;
 
 public static class EnvironmentVariables
 {
-    public static string ApiBaseUrl => "TECHNEWS_APP_API_AUTH_URL";
+    public static string? ApiBaseUrl { get; private set; }
+    public static int AuthExpirationInMinutes { get; private set; }
 
     public static IServiceCollection AddEnvironmentVariables(this IServiceCollection services, IWebHostEnvironment environment)
     {
@@ -30,6 +31,21 @@ public static class EnvironmentVariables
             // Ignored if other environments because it is using runtime environment variables
         }
 
+        LoadVariables();
+
         return services;
+    }
+
+    private static void LoadVariables()
+    {
+        ApiBaseUrl = Environment.GetEnvironmentVariable("TECHNEWS_APP_API_AUTH_URL");
+
+        int.TryParse(Environment.GetEnvironmentVariable("AUTH_EXPIRATION_IN_MINUTES"), out var parsedExpiration);
+        AuthExpirationInMinutes = parsedExpiration;
+
+        if (parsedExpiration == 0)
+        {
+            AuthExpirationInMinutes = 20;
+        }
     }
 }

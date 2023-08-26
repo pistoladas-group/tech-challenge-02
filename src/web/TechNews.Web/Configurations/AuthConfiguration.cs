@@ -14,7 +14,7 @@ public static class AuthConfiguration
 
                 options.LoginPath = "/account/login";
                 options.LogoutPath = "/account/logout";
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(20); //TODO: Tirar hardcode
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(EnvironmentVariables.AuthExpirationInMinutes);
                 options.SlidingExpiration = true;
                 options.AccessDeniedPath = "/Forbidden/";
             });
