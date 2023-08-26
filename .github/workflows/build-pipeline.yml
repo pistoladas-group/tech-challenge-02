@@ -38,21 +38,12 @@ jobs:
       - name: Check Resource Existence
         id: check-resource
         run: |
-          az resource show --resource-group "rg-tech-challenge-02" --name "acrtechnews" --resource-type "Microsoft.ContainerRegistry/registries" --output json
-          exit_code=$?
-          
-          # Process the exit code
-          if [[ $exit_code -eq 0 ]]; then
-            echo "The resource exists."
-            echo "::set-output name=resource_exists::true"
-          elif [[ $exit_code -eq 3 ]]; then
-            echo "The resource does not exist."
-            echo "::set-output name=resource_exists::false"
+          # az resource show --resource-group "rg-tech-challenge-02" --name "acrtechnews" --resource-type "Microsoft.ContainerRegistry/registries" --output json || true
+          if az resource show --resource-group "rg-tech-challenge-02" --name "acrtechnews" --resource-type "Microsoft.ContainerRegistry/registries" --output none; then
+             echo "keyvault exists"
           else
-            echo "An error occurred: Exit code $exit_code"
-            exit 1
+             echo "keyvault doesn't exist"
           fi
-  
   push-auth-image:
     runs-on: ubuntu-latest
     needs: [build-apps, check-resource]
