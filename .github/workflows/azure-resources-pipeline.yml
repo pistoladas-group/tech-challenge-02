@@ -2,10 +2,16 @@ name: Azure Resources Pipelines
 
 on:
   workflow_dispatch:
-
+    inputs:
+        create_or_delete:
+          description: 'Select if you want to create or delete the resources in Azure'
+          required: true
+          default: 'create'
+          options: ['create', 'delete']
 jobs:
   deploy-resources:
     runs-on: ubuntu-latest
+    if: github.event.inputs.job_to_run == 'create'
     env:
       VAULT_NAME: npvaulttechnews
     steps:
@@ -50,3 +56,20 @@ jobs:
         resourceGroupName: rg-tech-challenge-02
         template: ./azure/database/template.json
         parameters: ./azure/database/parameters-TechNews.json
+
+  delete-resources:
+    runs-on: ubuntu-latest
+    if: github.event.inputs.job_to_run == 'delete'
+
+    - name: Azure Login
+      id: login
+      uses: Azure/login@v1.4.6
+      with:
+        creds: ${{secrets.AZURE_CREDENTIALS}}
+    
+    - name: Delete Resources
+        uses: azure/cli@v1
+        with:
+          azcliversion: latest
+          inlineScript: |
+            az group delete --name tech-challenge-02 --yes --no-wait
