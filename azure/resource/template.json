@@ -50,7 +50,7 @@
             "properties": {
                 "publicNetworkAccess": "[parameters('containerRegistry').publicNetworkAccess]",
                 "zoneRedundancy": "[parameters('containerRegistry').zoneRedundancy]",
-                "adminUserEnabled": true
+                "anonymousPullEnabled": true
             }
         },
         {
