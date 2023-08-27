@@ -1,10 +1,10 @@
-﻿namespace TechNews.Common.Library;
+﻿namespace TechNews.Common.Library.Models;
 
 public class ApiResponse
 {
     public bool Succeeded { get; private set; }
-    public object? Data { get; init; }
-    public List<string>? Errors { get; init; }
+    public object? Data { get; private set; }
+    public List<ErrorResponse>? Errors { get; private set; }
 
     public ApiResponse()
     {
@@ -17,14 +17,14 @@ public class ApiResponse
         Data = data;
     }
 
-    public ApiResponse(string error)
+    public ApiResponse(ErrorResponse error)
     {
         Succeeded = false;
-        Errors ??= new List<string>();
+        Errors ??= new List<ErrorResponse>();
         Errors.Add(error);
     }
 
-    public ApiResponse(List<string> errors)
+    public ApiResponse(List<ErrorResponse> errors)
     {
         Succeeded = false;
         Errors = errors;

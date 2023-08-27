@@ -7,8 +7,9 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TechNews.Web.Configurations;
 using TechNews.Web.Models;
+using TechNews.Web.Configurations;
+using TechNews.Common.Library.Models;
 
 namespace TechNews.Web.Controllers;
 
@@ -37,7 +38,7 @@ public class AccountController : Controller
         var client = _httpFactory.CreateClient();
 
         var content = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
-        var apiResponse = await client.PostAsync($"{Environment.GetEnvironmentVariable(EnvironmentVariables.ApiBaseUrl)}/api/auth/user", content);
+        var apiResponse = await client.PostAsync($"{EnvironmentVariables.ApiBaseUrl}/api/auth/user", content);
 
         if (!apiResponse.IsSuccessStatusCode)
         {
@@ -45,8 +46,9 @@ public class AccountController : Controller
             {
                 var errorResponse = await apiResponse.Content.ReadAsStringAsync();
 
-                // TODO: Culturizar as mensagens (traduzir)
-                var response = JsonSerializer.Deserialize<AppResponseModel>(errorResponse, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+                var response = JsonSerializer.Deserialize<AppResponse>(errorResponse, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+
+                response = TranslateRegisterErrors(response);
 
                 return BadRequest(response);
             }
@@ -55,9 +57,16 @@ public class AccountController : Controller
         }
 
         var responseString = await apiResponse.Content.ReadAsStringAsync();
-        var appResponse = JsonSerializer.Deserialize<AppResponseModel>(responseString, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+        var appResponse = JsonSerializer.Deserialize<AppResponse>(responseString, new JsonSerializerOptions(JsonSerializerDefaults.Web));
 
-        var token = GetTokenFromString(appResponse?.Data?.ToString());
+        if (appResponse?.Data is null)
+        {
+            return StatusCode((int)HttpStatusCode.InternalServerError);
+        }
+
+        var accessTokenResponse = JsonSerializer.Deserialize<AccessTokenResponse?>(appResponse.Data.ToString(), new JsonSerializerOptions(JsonSerializerDefaults.Web));
+
+        var token = GetTokenFromString(accessTokenResponse?.AccessToken);
 
         if (token is null)
         {
@@ -83,13 +92,13 @@ public class AccountController : Controller
         var client = _httpFactory.CreateClient();
 
         var content = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
-        var apiResponse = await client.PostAsync($"{Environment.GetEnvironmentVariable(EnvironmentVariables.ApiBaseUrl)}/api/auth/user/login", content);
+        var apiResponse = await client.PostAsync($"{EnvironmentVariables.ApiBaseUrl}/api/auth/user/login", content);
 
         if (!apiResponse.IsSuccessStatusCode)
         {
             if (apiResponse.StatusCode == HttpStatusCode.BadRequest)
             {
-                return BadRequest(new AppResponseModel("Usuário ou senha inválidos"));
+                return BadRequest(new AppResponse() { Errors = new List<ErrorAppResponse>() { new ErrorAppResponse("invalid_request", "InvalidRequest", "Usuário ou senha inválidos") } });
             }
 
             if (apiResponse.StatusCode == HttpStatusCode.InternalServerError ||
@@ -102,9 +111,16 @@ public class AccountController : Controller
         }
 
         var responseString = await apiResponse.Content.ReadAsStringAsync();
-        var appResponse = JsonSerializer.Deserialize<AppResponseModel>(responseString, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+        var appResponse = JsonSerializer.Deserialize<AppResponse>(responseString, new JsonSerializerOptions(JsonSerializerDefaults.Web));
 
-        var token = GetTokenFromString(appResponse?.Data?.ToString());
+        if (appResponse?.Data is null)
+        {
+            return StatusCode((int)HttpStatusCode.InternalServerError);
+        }
+
+        var accessTokenResponse = JsonSerializer.Deserialize<AccessTokenResponse?>(appResponse.Data.ToString(), new JsonSerializerOptions(JsonSerializerDefaults.Web));
+
+        var token = GetTokenFromString(accessTokenResponse?.AccessToken);
 
         if (token is null)
         {
@@ -135,7 +151,7 @@ public class AccountController : Controller
 
         var authProperties = new AuthenticationProperties
         {
-            ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(20), //TODO: Tirar hardcode
+            ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(EnvironmentVariables.AuthExpirationInMinutes),
             IsPersistent = true
         };
 
@@ -149,5 +165,32 @@ public class AccountController : Controller
         claims.Add(new Claim("JWT", "Access Token JWT"));
 
         return new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+    }
+
+    private static AppResponse? TranslateRegisterErrors(AppResponse? appResponse)
+    {
+        if (appResponse is null)
+        {
+            return null;
+        }
+
+        if (appResponse.Errors is null)
+        {
+            return appResponse;
+        }
+
+        for (int i = 0; i < appResponse.Errors.Count; i++)
+        {
+            if (appResponse.Errors[i].ErrorCode == "DuplicateUserName" ||
+            appResponse.Errors[i].ErrorCode == "DuplicateEmail" ||
+            appResponse.Errors[i].ErrorCode == "InvalidEmail" ||
+            appResponse.Errors[i].ErrorCode == "InvalidUserName")
+            {
+                appResponse.Errors = new List<ErrorAppResponse>() { new ErrorAppResponse(appResponse.Errors[i].Error, appResponse.Errors[i].ErrorCode, "Usuário ou Email inválidos") };
+                break;
+            }
+        }
+
+        return appResponse;
     }
 }

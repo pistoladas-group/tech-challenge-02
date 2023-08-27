@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using TechNews.Common.Library;
+using TechNews.Common.Library.Models;
 
 namespace TechNews.Auth.Api.Filters;
 
@@ -15,12 +15,12 @@ public class ModelStateFilter : IActionFilter
 
         if (!context.ModelState.IsValid)
         {
-            var errors = new List<string>();
+            var errors = new List<ErrorResponse>();
             foreach (var item in context.ModelState.Values)
             {
                 foreach (var error in item.Errors)
                 {
-                    errors.Add(error.ErrorMessage);
+                    errors.Add(new ErrorResponse("invalid_request", "InvalidRequest", error.ErrorMessage));
                 }
             }
 

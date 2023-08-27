@@ -9,7 +9,7 @@ public static class AuthConfiguration
 {
     public static IServiceCollection AddAuthConfiguration(this IServiceCollection services)
     {
-        var retrievalUrl = Environment.GetEnvironmentVariable(EnvironmentVariables.AuthJwksUrl);
+        var retrievalUrl = EnvironmentVariables.AuthJwksUrl;
 
         services
             .AddAuthentication(options =>

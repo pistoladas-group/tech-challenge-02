@@ -5,10 +5,10 @@ namespace TechNews.Core.Api.Configurations;
 
 public static class EnvironmentVariables
 {
-    public static string DatabaseConnectionString => "TECHNEWS_CORE_API_DATABASE_CONNECTION_STRING";
-    public static string DiscordWebhookId => "TECHNEWS_CORE_API_DISCORD_WEBHOOK_ID";
-    public static string DiscordWebhookToken => "TECHNEWS_CORE_API_DISCORD_WEBHOOK_TOKEN";
-    public static string AuthJwksUrl => "TECHNEWS_CORE_API_AUTH_JWKS_URL";
+    public static string? DatabaseConnectionString { get; private set; }
+    public static string? DiscordWebhookId { get; private set; }
+    public static string? DiscordWebhookToken { get; private set; }
+    public static string? AuthJwksUrl { get; private set; }
 
     public static IServiceCollection AddEnvironmentVariables(this IServiceCollection services, IWebHostEnvironment environment)
     {
@@ -33,6 +33,16 @@ public static class EnvironmentVariables
             // Ignored if other environments because it is using runtime environment variables
         }
 
+        LoadVariables();
+
         return services;
+    }
+
+    private static void LoadVariables()
+    {
+        DatabaseConnectionString = Environment.GetEnvironmentVariable("TECHNEWS_CORE_API_DATABASE_CONNECTION_STRING");
+        DiscordWebhookId = Environment.GetEnvironmentVariable("TECHNEWS_CORE_API_DISCORD_WEBHOOK_ID");
+        DiscordWebhookToken = Environment.GetEnvironmentVariable("TECHNEWS_CORE_API_DISCORD_WEBHOOK_TOKEN");
+        AuthJwksUrl = Environment.GetEnvironmentVariable("TECHNEWS_CORE_API_AUTH_JWKS_URL");
     }
 }

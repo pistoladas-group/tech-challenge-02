@@ -7,7 +7,7 @@ public static class Database
 {
     public static IServiceCollection ConfigureDatabase(this IServiceCollection services)
     {
-        var connectionString = Environment.GetEnvironmentVariable(EnvironmentVariables.DatabaseConnectionString);
+        var connectionString = EnvironmentVariables.DatabaseConnectionString;
 
         if (string.IsNullOrWhiteSpace(connectionString))
         {

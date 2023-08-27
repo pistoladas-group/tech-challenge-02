@@ -158,7 +158,7 @@ const showWarningAlert = (errors) => {
         let joinedErrors = '';
 
         errors.forEach((error) => {
-            joinedErrors = joinedErrors + '<br>' + error;
+            joinedErrors = joinedErrors + '<br>' + error.description;
         });
 
         divWarningAlertElement.innerHTML = joinedErrors.substring(4);;
@@ -174,7 +174,7 @@ const showWarningErrors = (fileName, errors) => {
     let joinedErrors = '';
 
     errors.forEach((error) => {
-        joinedErrors = joinedErrors + ', ' + error;
+        joinedErrors = joinedErrors + ', ' + error.description;
         listWarningElement.appendChild(clonedItem);
         clonedItem.classList.remove('d-none');
     });
@@ -240,6 +240,7 @@ const login = () => {
 
 const createAccount = () => {
     PageLoading.show();
+    hideAlerts();
 
     let data = {
         id: generateGuid(),
@@ -258,17 +259,21 @@ const createAccount = () => {
         body: JSON.stringify(data)
     })
         .then(response => {
-            return response.json().then(data => {
+            const status = response.status;
+
+            return response.text().then(data => {
                 return {
                     data,
-                    status: response.status
+                    status
                 };
             });
+
         })
         .then(response => {
             PageLoading.hide();
 
             if (response.status === 400) {
+                response.data = JSON.parse(response.data);
                 showWarningAlert(response.data.errors);
                 return;
             }

@@ -2,7 +2,7 @@ name: Azure Resources Pipelines
 
 on:
   workflow_dispatch:
-
+  
 jobs:
   deploy-resources:
     runs-on: ubuntu-latest

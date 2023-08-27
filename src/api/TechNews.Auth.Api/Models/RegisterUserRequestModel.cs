@@ -24,6 +24,7 @@ public class RegisterUserRequestModel
     /// </summary>
     [Required(ErrorMessage = "The {0} field is mandatory")]
     [MaxLength(256, ErrorMessage = "The {0} field must have a maximum length of {1} characters")]
+    [RegularExpression("^[a-zA-Z0-9-._@]*$", ErrorMessage = "The {0} field has invalid characters")]
     public string UserName { get; set; } = string.Empty;
 
     /// <summary>
@@ -37,8 +38,7 @@ public class RegisterUserRequestModel
     [Required(ErrorMessage = "The {0} field is mandatory")]
     [MinLength(8, ErrorMessage = "The {0} field must have at least {1} characters")]
     [MaxLength(128, ErrorMessage = "The {0} field must have a maximum length of {1} characters")]
-    //TODO: ajustar regex
-    //[RegularExpression("((\\d)([a-z])([A-Z])(\\W))", ErrorMessage = "The {0} field must have at least one digit, one lowercase, one uppercase and a special character")]
+    [RegularExpression(@"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).+$", ErrorMessage = "The {0} field must have at least one digit, one lowercase, one uppercase and a special character")]
     public string Password { get; set; } = string.Empty;
 
     /// <summary>

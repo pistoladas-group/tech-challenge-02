@@ -1,4 +1,5 @@
 using Serilog;
+using TechNews.Auth.Api.Configurations;
 
 namespace TechNews.Auth.Api.Services;
 
@@ -16,7 +17,7 @@ public class KeyRotatorBackgroundService : IHostedService, IDisposable
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        _timer = new Timer(ExecuteProcess, null, TimeSpan.Zero, TimeSpan.FromMinutes(5)); //TODO: deixar configurável
+        _timer = new Timer(ExecuteProcess, null, TimeSpan.Zero, TimeSpan.FromMinutes(EnvironmentVariables.KeyRotatorExecutionInMinutes));
         return Task.CompletedTask;
     }
 
@@ -69,7 +70,7 @@ public class KeyRotatorBackgroundService : IHostedService, IDisposable
 
     public CryptographicKey CreateKey()
     {
-        var rsa = System.Security.Cryptography.RSA.Create(2048); //TODO: configurar
+        var rsa = System.Security.Cryptography.RSA.Create(EnvironmentVariables.KeyCreationSizeInBits);
         var rsaKey = new CryptographicKey(rsa);
 
         return rsaKey;
