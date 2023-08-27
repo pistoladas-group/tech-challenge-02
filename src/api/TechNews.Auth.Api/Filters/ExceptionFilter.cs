@@ -11,7 +11,7 @@ public class ExceptionFilter : IExceptionFilter
     {
         Log.Error(context.Exception, context.Exception.Message);
 
-        if (context.Result != null)
+        if (context.Result is not null)
         {
             return;
         }

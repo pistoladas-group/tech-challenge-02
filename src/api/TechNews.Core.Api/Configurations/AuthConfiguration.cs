@@ -19,7 +19,7 @@ public static class AuthConfiguration
             }).
             AddJwtBearer(options =>
             {
-                if (retrievalUrl == null)
+                if (retrievalUrl is null)
                 {
                     throw new ApplicationException(nameof(retrievalUrl));
                 }
