@@ -6,48 +6,47 @@ on:
 jobs:
   deploy-resources:
     runs-on: ubuntu-latest
+    env:
+      VAULT_NAME: npvaulttechnews
     steps:
+    - name: Clone Repo
+      uses: actions/checkout@v3
+
     - name: Azure Login
       id: login
       uses: Azure/login@v1.4.6
       with:
         creds: ${{secrets.AZURE_CREDENTIALS}}
-      
-    - name: Deploy ARM Template
+
+    - name: Deploy Resources Template
+      uses: azure/arm-deploy@v1
+      with:
+        subscriptionId: 5d17a1d6-e7cf-4fb4-978f-701807e9dd06
+        resourceGroupName: rg-tech-challenge-02
+        template: ./azure/resource/template.json
+        parameters: ./azure/resource/parameters.json
+
+    - name: Upload Vault Secrets
       uses: azure/cli@v1
       with:
-          azcliversion: latest
-          inlineScript: |
-            az deployment group create --resource-group tech-challenge-02 --template-file ./azure/resource/template.json --parameters ./azure/resource/parameters.json
-  
-  deploy-auth-database:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Azure Login
-      id: login
-      uses: Azure/login@v1.4.6
+        azcliversion: latest
+        inlineScript: |
+          az keyvault secret set --vault-name $VAULT_NAME --name administratorLogin --value ${{secrets.ADMIN_LOGIN}}
+          az keyvault secret set --vault-name $VAULT_NAME --name administratorLoginPassword --value ${{secrets.ADMIN_PASSWORD}}
+          az keyvault secret set --vault-name $VAULT_NAME --name clientIpValue --value ${{secrets.CLIENT_IP}}
+
+    - name: Deploy TechNewsAuth Database Template
+      uses: azure/arm-deploy@v1
       with:
-        creds: ${{secrets.AZURE_CREDENTIALS}}
-      
-    - name: Deploy ARM Template
-      uses: azure/cli@v1
+        subscriptionId: 5d17a1d6-e7cf-4fb4-978f-701807e9dd06
+        resourceGroupName: rg-tech-challenge-02
+        template: ./azure/database/template.json
+        parameters: ./azure/database/parameters-TechNewsAuth.json
+
+    - name: Deploy TechNews Database Template
+      uses: azure/arm-deploy@v1
       with:
-          azcliversion: latest
-          inlineScript: |
-            az deployment group create --resource-group tech-challenge-02 --template-file ./azure/database/template.json --parameters ./azure/database/parameters-TechNewsAuth.json
-  
-  deploy-core-database:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Azure Login
-      id: login
-      uses: Azure/login@v1.4.6
-      with:
-        creds: ${{secrets.AZURE_CREDENTIALS}}
-      
-    - name: Deploy ARM Template
-      uses: azure/cli@v1
-      with:
-          azcliversion: latest
-          inlineScript: |
-            az deployment group create --resource-group tech-challenge-02 --template-file ./azure/database/template.json --parameters ./azure/database/parameters-TechNews.json
+        subscriptionId: 5d17a1d6-e7cf-4fb4-978f-701807e9dd06
+        resourceGroupName: rg-tech-challenge-02
+        template: ./azure/database/template.json
+        parameters: ./azure/database/parameters-TechNews.json
