@@ -1,8 +1,7 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using TechNews.Auth.Api.Models;
-using TechNews.Auth.Api.Services;
+using TechNews.Auth.Api.Services.KeyRetrievers;
 using TechNews.Common.Library.Models;
 
 namespace TechNews.Auth.Api.Controllers;
@@ -39,17 +38,12 @@ public class JwksController : ControllerBase
 
         foreach (var key in keys)
         {
-            var publicParameters = key.Instance.ExportParameters(false);
+            var jwk = key.GetJsonWebKey();
 
-            result.Keys.Add(new JsonWebKeyModel()
+            if (jwk is not null)
             {
-                KeyType = "RSA",
-                KeyId = key.Id.ToString(),
-                Algorithm = "RS256",
-                Use = "sig",
-                Modulus = Base64UrlEncoder.Encode(publicParameters.Modulus),
-                Exponent = Base64UrlEncoder.Encode(publicParameters.Exponent)
-            });
+                result.Keys.Add(jwk);
+            }
         }
 
         return Ok(result);

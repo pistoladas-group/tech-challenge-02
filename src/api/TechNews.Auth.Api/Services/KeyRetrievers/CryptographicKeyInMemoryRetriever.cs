@@ -1,20 +1,20 @@
-﻿namespace TechNews.Auth.Api.Services;
+﻿namespace TechNews.Auth.Api.Services.KeyRetrievers;
 
 public class CryptographicKeyInMemoryRetriever : ICryptographicKeyRetriever
 {
-    private IList<CryptographicKey> _keys { get; set; } = new List<CryptographicKey>();
+    private IList<ICryptographicKey> _keys { get; set; } = new List<ICryptographicKey>();
 
-    public CryptographicKey? GetExistingKey()
+    public ICryptographicKey? GetExistingKey()
     {
         return _keys.OrderByDescending(k => k.CreationDate).FirstOrDefault();
     }
 
-    public void StoreKey(CryptographicKey key)
+    public void StoreKey(ICryptographicKey key)
     {
         _keys.Add(key);
     }
 
-    public IList<CryptographicKey> GetLastKeys(int quantity)
+    public IList<ICryptographicKey> GetLastKeys(int quantity)
     {
         return _keys.OrderByDescending(k => k.CreationDate).Take(quantity).ToList();
     }

@@ -1,5 +1,6 @@
 using Serilog;
 using TechNews.Auth.Api.Configurations;
+using TechNews.Auth.Api.Services.KeyRetrievers;
 
 namespace TechNews.Auth.Api.Services;
 
@@ -54,7 +55,8 @@ public class KeyRotatorBackgroundService : IHostedService, IDisposable
 
         if (!isKeyValid)
         {
-            existingKey = CreateKey();
+            var newKey = scope.ServiceProvider.GetRequiredService<ICryptographicKey>();
+            existingKey = newKey.CreateKey();
             keyRetrieverService.StoreKey(existingKey);
         }
 
@@ -66,13 +68,5 @@ public class KeyRotatorBackgroundService : IHostedService, IDisposable
 
         _isProcessing = false;
         Log.Debug("{service}: finished.", ServiceName);
-    }
-
-    public CryptographicKey CreateKey()
-    {
-        var rsa = System.Security.Cryptography.RSA.Create(EnvironmentVariables.KeyCreationSizeInBits);
-        var rsaKey = new CryptographicKey(rsa);
-
-        return rsaKey;
     }
 }

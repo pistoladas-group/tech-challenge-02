@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using TechNews.Auth.Api.Data;
 using TechNews.Auth.Api.Models;
-using TechNews.Auth.Api.Services;
 using TechNews.Auth.Api.Configurations;
 using TechNews.Common.Library.Models;
+using TechNews.Auth.Api.Services.KeyRetrievers;
 
 namespace TechNews.Auth.Api.Controllers;
 
@@ -17,13 +17,13 @@ public class AuthController : ControllerBase
 {
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
-    private readonly RsaTokenSigner _rsaTokenSigner;
+    private readonly ICryptographicKeyRetriever _cryptographicKeyRetriever;
 
-    public AuthController(UserManager<User> userManager, SignInManager<User> signInManager, RsaTokenSigner crypto)
+    public AuthController(UserManager<User> userManager, SignInManager<User> signInManager, ICryptographicKeyRetriever cryptographicKeyRetriever)
     {
         _userManager = userManager;
         _signInManager = signInManager;
-        _rsaTokenSigner = crypto;
+        _cryptographicKeyRetriever = cryptographicKeyRetriever;
     }
 
     /// <summary>
@@ -177,9 +177,9 @@ public class AuthController : ControllerBase
 
         claims.AddClaims(tokenClaims);
 
-        var signingCredentials = _rsaTokenSigner.GetSigningCredentials();
+        var key = _cryptographicKeyRetriever.GetExistingKey();
 
-        if (signingCredentials is null)
+        if (key is null)
         {
             return null;
         }
@@ -194,7 +194,7 @@ public class AuthController : ControllerBase
             Subject = claims,
             Expires = DateTime.UtcNow.AddMinutes(EnvironmentVariables.TokenExpirationInMinutes),
             TokenType = tokenType,
-            SigningCredentials = signingCredentials
+            SigningCredentials = key.GetSigningCredentials()
         });
 
         var jwt = tokenHandler.WriteToken(token);
