@@ -1,1 +1,30 @@
+name: Deploy Pipelines
 
+on:
+  workflow_dispatch:
+  
+jobs:
+  deploy-auth-container:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Azure Login
+      id: login
+      uses: Azure/login@v1.4.6
+      with:
+        creds: ${{secrets.AZURE_CREDENTIALS}}
+
+    - name: Deploy TechNews Auth Container
+      uses: azure/cli@v1
+      with:
+          max_attempts: 1
+          retry_on: error
+          azcliversion: latest
+          inlineScript: |
+            az container create \
+            --resource-group rg-tech-challenge-02 \
+            --name technews-auth-api-container \
+            --image technews-auth-api:v1 \
+            --environment-variables TECHNEWS_AUTH_API_DATABASE_CONNECTION_STRING="Server=tcp:dbstechnews.database.windows.net,1433;Initial Catalog=TechNewsAuth;Persist Security Info=False;User ID=${{ secrets.AUTH_DATABASE_USERNAME }};Password=${{ secrets.AUTH_DATABASE_PASSWORD }};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" \
+            --registry-login-server acrtechnews.azurecr.io \
+            --registry-username ${{ secrets.REGISTRY_USERNAME }} \
+            --registry-password ${{ secrets.REGISTRY_PASSWORD }}
