@@ -35,6 +35,13 @@ jobs:
           az keyvault secret set --vault-name $VAULT_NAME --name administratorLoginPassword --value ${{secrets.ADMIN_PASSWORD}}
           az keyvault secret set --vault-name $VAULT_NAME --name clientIpValue --value ${{secrets.CLIENT_IP}}
 
+    - name: Upload Vault Secrets
+      uses: azure/cli@v1
+      with:
+        azcliversion: latest
+        inlineScript: |
+          az acr update --name acrtechnews --anonymous-pull-enabled
+
     - name: Deploy TechNewsAuth Database Template
       uses: azure/arm-deploy@v1
       with:
