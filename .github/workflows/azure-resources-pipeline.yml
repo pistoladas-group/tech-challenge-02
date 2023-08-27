@@ -35,7 +35,7 @@ jobs:
           az keyvault secret set --vault-name $VAULT_NAME --name administratorLoginPassword --value ${{secrets.ADMIN_PASSWORD}}
           az keyvault secret set --vault-name $VAULT_NAME --name clientIpValue --value ${{secrets.CLIENT_IP}}
 
-    - name: Upload Vault Secrets
+    - name: Set ACR to Public
       uses: azure/cli@v1
       with:
         azcliversion: latest
