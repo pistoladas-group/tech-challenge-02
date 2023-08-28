@@ -33,5 +33,8 @@ jobs:
             --memory 0.5 --cpu 1 --ports 5138 \
             --ip-address Public \
             --dns-name-label technews-auth-api \
+            --registry-login-server acrtechnews.azurecr.io \
+            --registry-username ${{ secrets.REGISTRY_USERNAME }} \
+            --registry-password ${{ secrets.REGISTRY_PASSWORD }} \
             --name technews-auth-api-container \
             --image acrtechnews.azurecr.io/technews-auth-api:v1
