@@ -22,9 +22,16 @@ jobs:
           inlineScript: |
             az container create \
             --resource-group rg-tech-challenge-02 \
+            --environment-variables \
+            TECHNEWS_AUTH_API_DATABASE_CONNECTION_STRING="Server=tcp:dbstechnews.database.windows.net,1433;Initial Catalog=TechNewsAuth;Persist Security Info=False;User ID=${{ secrets.AUTH_DATABASE_USERNAME }};Password=${{ secrets.AUTH_DATABASE_PASSWORD }};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;pooling=true" \
+            ASPNETCORE_URLS="http://+:5138" \
+            TOKEN_EXPIRATION_IN_MINUTES="10" \
+            KEY_ROTATOR_EXECUTION_IN_MINUTES="5" \
+            KEY_CREATION_SIZE_IN_BITS="2048" \
+            KEY_EXPIRATION_IN_DAYS="30" \
+            CRYPTOGRAPHIC_ALGORITHM="RSA" \
+            --memory 0.5 --cpu 1 --ports 5138 \
+            --ip-address Public \
+            --dns-name-label technews-auth-api \
             --name technews-auth-api-container \
-            --image technews-auth-api:v1 \
-            --environment-variables TECHNEWS_AUTH_API_DATABASE_CONNECTION_STRING="Server=tcp:dbstechnews.database.windows.net,1433;Initial Catalog=TechNewsAuth;Persist Security Info=False;User ID=${{ secrets.AUTH_DATABASE_USERNAME }};Password=${{ secrets.AUTH_DATABASE_PASSWORD }};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" \
-            --registry-login-server acrtechnews.azurecr.io \
-            --registry-username ${{ secrets.REGISTRY_USERNAME }} \
-            --registry-password ${{ secrets.REGISTRY_PASSWORD }}
+            --image acrtechnews.azurecr.io/technews-auth-api:v1
