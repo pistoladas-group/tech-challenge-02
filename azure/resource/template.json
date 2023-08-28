@@ -49,8 +49,7 @@
             "tags": "[parameters('containerRegistry').tags]",
             "properties": {
                 "publicNetworkAccess": "[parameters('containerRegistry').publicNetworkAccess]",
-                "zoneRedundancy": "[parameters('containerRegistry').zoneRedundancy]",
-                "anonymousPullEnabled": true
+                "zoneRedundancy": "[parameters('containerRegistry').zoneRedundancy]"
             }
         },
         {
