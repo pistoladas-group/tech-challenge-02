@@ -17,7 +17,7 @@ jobs:
         creds: ${{secrets.AZURE_CREDENTIALS}}
 
     - name: Run Auth Migrations
-    - uses: azure/sql-action@v2.2
+      uses: azure/sql-action@v2.2
       with:        
         connection-string: 'Server=tcp:dbstechnews.database.windows.net,1433;Initial Catalog=TechNewsAuth;Persist Security Info=False;User ID=${{ secrets.DATABASE_USERNAME }};Password=${{ secrets.DATABASE_PASSWORD }};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;pooling=true'
         path: './azure/sql/auth/scripts/*.sql'
