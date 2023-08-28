@@ -25,11 +25,11 @@ jobs:
             --environment-variables \
             TECHNEWS_AUTH_API_DATABASE_CONNECTION_STRING="Server=tcp:dbstechnews.database.windows.net,1433;Initial Catalog=TechNewsAuth;Persist Security Info=False;User ID=${{ secrets.DATABASE_USERNAME }};Password=${{ secrets.DATABASE_PASSWORD }};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;pooling=true" \
             ASPNETCORE_URLS="http://+:5138" \
-            TOKEN_EXPIRATION_IN_MINUTES="${{ variables.TOKEN_EXPIRATION_IN_MINUTES }}" \
-            KEY_ROTATOR_EXECUTION_IN_MINUTES="${{ variables.KEY_ROTATOR_EXECUTION_IN_MINUTES }}" \
-            KEY_CREATION_SIZE_IN_BITS="${{ variables.KEY_CREATION_SIZE_IN_BITS }}" \
-            KEY_EXPIRATION_IN_DAYS="${{ variables.KEY_EXPIRATION_IN_DAYS }}" \
-            CRYPTOGRAPHIC_ALGORITHM="${{ variables.CRYPTOGRAPHIC_ALGORITHM }}" \
+            TOKEN_EXPIRATION_IN_MINUTES="${{ vars.TOKEN_EXPIRATION_IN_MINUTES }}" \
+            KEY_ROTATOR_EXECUTION_IN_MINUTES="${{ vars.KEY_ROTATOR_EXECUTION_IN_MINUTES }}" \
+            KEY_CREATION_SIZE_IN_BITS="${{ vars.KEY_CREATION_SIZE_IN_BITS }}" \
+            KEY_EXPIRATION_IN_DAYS="${{ vars.KEY_EXPIRATION_IN_DAYS }}" \
+            CRYPTOGRAPHIC_ALGORITHM="${{ vars.CRYPTOGRAPHIC_ALGORITHM }}" \
             --memory 0.5 --cpu 1 --ports 5138 \
             --ip-address Public \
             --dns-name-label technews-auth-api \
