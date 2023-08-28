@@ -38,10 +38,6 @@ jobs:
             --registry-password ${{ secrets.REGISTRY_PASSWORD }} \
             --name technews-auth-api-container \
             --image acrtechnews.azurecr.io/technews-auth-api:v1
-
-  healthcheck-auth:
-    runs-on: ubuntu-latest
-    steps:
     - name: Check Response Content
       run: |
         # Replace with your actual curl command
