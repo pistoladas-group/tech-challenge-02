@@ -23,6 +23,7 @@ jobs:
             az container create \
             --resource-group rg-tech-challenge-02 \
             --environment-variables \
+            TECHNEWS_AUTH_API_DATABASE_CONNECTION_STRING="Server=tcp:dbstechnews.database.windows.net,1433;Initial Catalog=TechNewsAuth;Persist Security Info=False;User ID=${{ secrets.DATABASE_USERNAME }};Password=${{ secrets.DATABASE_PASSWORD }};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;pooling=true" \
             ASPNETCORE_URLS="http://+:5138" \
             TOKEN_EXPIRATION_IN_MINUTES="${{ vars.TOKEN_EXPIRATION_IN_MINUTES }}" \
             KEY_ROTATOR_EXECUTION_IN_MINUTES="${{ vars.KEY_ROTATOR_EXECUTION_IN_MINUTES }}" \
