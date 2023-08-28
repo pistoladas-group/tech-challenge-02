@@ -23,7 +23,6 @@ jobs:
             az container create \
             --resource-group rg-tech-challenge-02 \
             --environment-variables \
-            TECHNEWS_AUTH_API_DATABASE_CONNECTION_STRING="Server=tcp:dbstechnews.database.windows.net,1433;Initial Catalog=TechNewsAuth;Persist Security Info=False;User ID=${{ secrets.DATABASE_USERNAME }};Password=${{ secrets.DATABASE_PASSWORD }};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;pooling=true" \
             ASPNETCORE_URLS="http://+:5138" \
             TOKEN_EXPIRATION_IN_MINUTES="${{ vars.TOKEN_EXPIRATION_IN_MINUTES }}" \
             KEY_ROTATOR_EXECUTION_IN_MINUTES="${{ vars.KEY_ROTATOR_EXECUTION_IN_MINUTES }}" \
@@ -38,9 +37,8 @@ jobs:
             --registry-password ${{ secrets.REGISTRY_PASSWORD }} \
             --name technews-auth-api-container \
             --image acrtechnews.azurecr.io/technews-auth-api:v1
-    - name: Check Response Content
+    - name: Health Check Auth
       run: |
-        # Replace with your actual curl command
         RESPONSE=$(curl -s "http://technews-auth-api.brazilsouth.azurecontainer.io:5138/health")
 
         if [[ "$RESPONSE" == *"Healthy"* ]]; then
