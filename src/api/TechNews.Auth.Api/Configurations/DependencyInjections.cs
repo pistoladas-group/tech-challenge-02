@@ -8,6 +8,7 @@ public static class DependencyInjections
 {
     public static IServiceCollection ConfigureDependencyInjections(this IServiceCollection services)
     {
+        // Scopeds
         switch (EnvironmentVariables.CryptographicAlgorithm)
         {
             case "ECC":
@@ -21,14 +22,10 @@ public static class DependencyInjections
                 break;
         }
 
-        if (string.IsNullOrWhiteSpace(EnvironmentVariables.AzureKeyVaultUrl))
-        {
-            throw new ApplicationException($"Environment variable '{nameof(EnvironmentVariables.AzureKeyVaultUrl)}' is not defined. " +
-                                           $"Please consider using service '{nameof(CryptographicKeyInMemoryRetriever)}'.");
-        }
-
+        // Singletons
         services.AddSingleton<ICryptographicKeyRetriever, CryptographicKeyAzureVaultRetriever>();
 
+        // Background Services
         services.AddHostedService<KeyRotatorBackgroundService>();
 
         return services;
