@@ -3,6 +3,7 @@ name: Deploy Pipelines
 on:
   workflow_dispatch:
 
+jobs:
   deploy-auth-container:
     runs-on: ubuntu-latest
     steps:
