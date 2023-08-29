@@ -38,6 +38,7 @@ jobs:
             --registry-password ${{ secrets.REGISTRY_PASSWORD }} \
             --name technews-auth-api-container \
             --image acrtechnews.azurecr.io/technews-auth-api:v1
+
     - name: Health Check Auth
       run: |
         RESPONSE=$(curl -s "http://technews-auth-api.brazilsouth.azurecontainer.io:5138/health")
@@ -48,3 +49,57 @@ jobs:
           echo "API is not Healthy"
           exit 1
         fi
+        
+    - name: Deploy TechNews Core Container
+      uses: azure/cli@v1
+      with:
+          max_attempts: 1
+          retry_on: error
+          azcliversion: latest
+          inlineScript: |
+            az container create \
+            --resource-group rg-tech-challenge-02 \
+            --environment-variables \
+            TECHNEWS_CORE_API_DATABASE_CONNECTION_STRING="Server=tcp:dbstechnews.database.windows.net,1433;Initial Catalog=TechNews;Persist Security Info=False;User ID=${{ secrets.DATABASE_USERNAME }};Password=${{ secrets.DATABASE_PASSWORD }};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;pooling=true" \
+            ASPNETCORE_URLS="http://+:5142" \
+            TECHNEWS_CORE_API_AUTH_JWKS_URL="http://technews-auth-api.brazilsouth.azurecontainer.io:5138/jwks" \
+            --memory 0.5 --cpu 1 --ports 5142 \
+            --ip-address Public \
+            --dns-name-label technews-core-api \
+            --registry-login-server acrtechnews.azurecr.io \
+            --registry-username ${{ secrets.REGISTRY_USERNAME }} \
+            --registry-password ${{ secrets.REGISTRY_PASSWORD }} \
+            --name technews-core-api-container \
+            --image acrtechnews.azurecr.io/technews-core-api:v1
+
+    - name: Health Check Core
+      run: |
+        RESPONSE=$(curl -s "http://technews-core-api.brazilsouth.azurecontainer.io:5142/health")
+
+        if [[ "$RESPONSE" == *"Healthy"* ]]; then
+          echo "API is Healthy"
+        else
+          echo "API is not Healthy"
+          exit 1
+        fi
+
+    - name: Deploy TechNews Web Container
+      uses: azure/cli@v1
+      with:
+          max_attempts: 1
+          retry_on: error
+          azcliversion: latest
+          inlineScript: |
+            az container create \
+            --resource-group rg-tech-challenge-02 \
+            --environment-variables \
+            TECHNEWS_APP_API_AUTH_URL="http://technews-auth-api.brazilsouth.azurecontainer.io:5138" \
+            ASPNETCORE_URLS="http://+:5055" \
+            --memory 0.5 --cpu 1 --ports 5055 \
+            --ip-address Public \
+            --dns-name-label technews-web \
+            --registry-login-server acrtechnews.azurecr.io \
+            --registry-username ${{ secrets.REGISTRY_USERNAME }} \
+            --registry-password ${{ secrets.REGISTRY_PASSWORD }} \
+            --name technews-web-container \
+            --image acrtechnews.azurecr.io/technews-web:v1
