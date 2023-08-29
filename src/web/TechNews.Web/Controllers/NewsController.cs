@@ -4,7 +4,7 @@ using TechNews.Web.Models;
 
 namespace TechNews.Web.Controllers;
 
-[AllowAnonymous]
+[Authorize]
 public class NewsController : Controller
 {
     private readonly ILogger<NewsController> _logger;

@@ -36,9 +36,10 @@ public class AccountController : Controller
     public async Task<IActionResult> SignUpAsync([FromBody] SignUpViewModel model)
     {
         var client = _httpFactory.CreateClient();
-
         var content = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
-        var apiResponse = await client.PostAsync($"{EnvironmentVariables.ApiBaseUrl}/api/auth/user", content);
+        var uri = $"{EnvironmentVariables.ApiBaseUrl}/api/auth/user";
+
+        var apiResponse = await client.PostAsync(uri, content);
 
         if (!apiResponse.IsSuccessStatusCode)
         {
@@ -90,9 +91,10 @@ public class AccountController : Controller
     public async Task<IActionResult> SignInAsync([FromBody] SignInViewModel model)
     {
         var client = _httpFactory.CreateClient();
-
         var content = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
-        var apiResponse = await client.PostAsync($"{EnvironmentVariables.ApiBaseUrl}/api/auth/user/login", content);
+        var uri = $"{EnvironmentVariables.ApiBaseUrl}/api/auth/user/login";
+
+        var apiResponse = await client.PostAsync(uri, content);
 
         if (!apiResponse.IsSuccessStatusCode)
         {

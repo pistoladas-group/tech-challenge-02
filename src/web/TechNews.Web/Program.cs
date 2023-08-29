@@ -7,6 +7,7 @@ builder.Services
         .AddHttpClient()
         .AddAuthConfiguration()
         .AddEnvironmentVariables(builder.Environment)
+        .ConfigureDependencyInjections()
         .AddControllersWithViews(options => options.Filters.AddFilterConfiguration());
 
 var app = builder.Build();

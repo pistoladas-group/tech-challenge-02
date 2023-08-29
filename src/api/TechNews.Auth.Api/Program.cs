@@ -12,7 +12,8 @@ builder.Services
         .AddLoggingConfiguration(builder.Host)
         .ConfigureIdentity()
         .ConfigureDatabase()
-        .ConfigureDependencyInjections();
+        .ConfigureDependencyInjections()
+        .AddHealthChecks();
 
 var app = builder.Build();
 
@@ -22,4 +23,5 @@ app.UseHttpsRedirection();
 app.UseMiddleware<ResponseHeaderMiddleware>();
 app.UseIdentityConfiguration();
 app.MapControllers();
+app.MapHealthChecks("/health");
 app.Run();
