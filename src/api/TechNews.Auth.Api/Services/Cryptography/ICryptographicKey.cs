@@ -3,10 +3,11 @@ using TechNews.Auth.Api.Models;
 
 public interface ICryptographicKey
 {
-    DateTime? CreationDate { get; }
+    Guid Id { get; }
+    DateTime CreationDate { get; }
 
-    ICryptographicKey CreateKey();
     bool IsValid();
-    SigningCredentials? GetSigningCredentials();
-    JsonWebKeyModel? GetJsonWebKey();
+    SigningCredentials GetSigningCredentials();
+    JsonWebKeyModel GetJsonWebKey();
+    string GetBase64PrivateKeyBytes();
 }

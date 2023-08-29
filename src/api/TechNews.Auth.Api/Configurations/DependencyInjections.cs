@@ -11,15 +11,23 @@ public static class DependencyInjections
         switch (EnvironmentVariables.CryptographicAlgorithm)
         {
             case "ECC":
+                services.AddScoped<ICryptographicKeyFactory, EcdsaCryptographicKeyFactory>();
                 services.AddScoped<ICryptographicKey, EcdsaCryptographicKey>();
                 break;
             case "RSA":
             default:
+                services.AddScoped<ICryptographicKeyFactory, RsaCryptographicKeyFactory>();
                 services.AddScoped<ICryptographicKey, RsaCryptographicKey>();
                 break;
         }
 
-        services.AddSingleton<ICryptographicKeyRetriever, CryptographicKeyInMemoryRetriever>();
+        if (string.IsNullOrWhiteSpace(EnvironmentVariables.AzureKeyVaultUrl))
+        {
+            throw new ApplicationException($"Environment variable '{nameof(EnvironmentVariables.AzureKeyVaultUrl)}' is not defined. " +
+                                           $"Please consider using service '{nameof(CryptographicKeyInMemoryRetriever)}'.");
+        }
+
+        services.AddSingleton<ICryptographicKeyRetriever, CryptographicKeyAzureVaultRetriever>();
 
         services.AddHostedService<KeyRotatorBackgroundService>();
 

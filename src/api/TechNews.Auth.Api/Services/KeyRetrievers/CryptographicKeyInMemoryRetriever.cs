@@ -4,18 +4,20 @@ public class CryptographicKeyInMemoryRetriever : ICryptographicKeyRetriever
 {
     private IList<ICryptographicKey> _keys { get; set; } = new List<ICryptographicKey>();
 
-    public ICryptographicKey? GetExistingKey()
+    public Task<ICryptographicKey?> GetExistingKeyAsync()
     {
-        return _keys.OrderByDescending(k => k.CreationDate).FirstOrDefault();
+        return Task.FromResult(_keys.OrderByDescending(k => k.CreationDate).FirstOrDefault());
     }
 
-    public void StoreKey(ICryptographicKey key)
+    public Task StoreKeyAsync(ICryptographicKey key)
     {
         _keys.Add(key);
+
+        return Task.CompletedTask;
     }
 
-    public IList<ICryptographicKey> GetLastKeys(int quantity)
+    public Task<List<ICryptographicKey>> GetLastKeysAsync(int quantity)
     {
-        return _keys.OrderByDescending(k => k.CreationDate).Take(quantity).ToList();
+        return Task.FromResult(_keys.OrderByDescending(k => k.CreationDate).Take(quantity).ToList());
     }
 }

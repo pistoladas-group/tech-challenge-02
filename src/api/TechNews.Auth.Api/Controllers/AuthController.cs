@@ -39,7 +39,7 @@ public class AuthController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.Created)]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.InternalServerError)]
-    public async Task<IActionResult> RegisterUser([FromBody] RegisterUserRequestModel user)
+    public async Task<IActionResult> RegisterUserAsync([FromBody] RegisterUserRequestModel user)
     {
         var id = user.Id ?? Guid.NewGuid();
 
@@ -66,7 +66,7 @@ public class AuthController : ControllerBase
 
         var claims = await GetUserClaims(registeredUserResult);
 
-        var token = GetToken(claims, registeredUserResult);
+        var token = await GetTokenAsync(claims, registeredUserResult);
 
         if (token is null)
         {
@@ -130,7 +130,7 @@ public class AuthController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.Forbidden)]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.InternalServerError)]
-    public async Task<IActionResult> Login([FromBody] LoginRequestModel user)
+    public async Task<IActionResult> LoginAsync([FromBody] LoginRequestModel user)
     {
         var registeredUserResult = await _userManager.FindByEmailAsync(user.Email);
 
@@ -153,7 +153,7 @@ public class AuthController : ControllerBase
 
         var claims = await GetUserClaims(registeredUserResult);
 
-        var token = GetToken(claims, registeredUserResult);
+        var token = await GetTokenAsync(claims, registeredUserResult);
 
         if (token is null)
         {
@@ -163,7 +163,7 @@ public class AuthController : ControllerBase
         return Ok(new ApiResponse(data: token));
     }
 
-    private AccessTokenResponse? GetToken(ClaimsIdentity claims, User user)
+    private async Task<AccessTokenResponse?> GetTokenAsync(ClaimsIdentity claims, User user)
     {
         var tokenClaims = new List<Claim>
         {
@@ -177,7 +177,7 @@ public class AuthController : ControllerBase
 
         claims.AddClaims(tokenClaims);
 
-        var key = _cryptographicKeyRetriever.GetExistingKey();
+        var key = await _cryptographicKeyRetriever.GetExistingKeyAsync();
 
         if (key is null)
         {

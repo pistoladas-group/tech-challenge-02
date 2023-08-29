@@ -25,9 +25,9 @@ public class JwksController : ControllerBase
     [Produces("application/json")]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.InternalServerError)]
-    public IActionResult GetJsonWebKeySets()
+    public async Task<IActionResult> GetJsonWebKeySetsAsync()
     {
-        var keys = _cryptographicKeyRetriever.GetLastKeys(2);
+        var keys = await _cryptographicKeyRetriever.GetLastKeysAsync(2);
 
         var result = new JwksResponseModel();
 

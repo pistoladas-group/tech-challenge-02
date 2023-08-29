@@ -1,5 +1,6 @@
 using Serilog;
 using TechNews.Auth.Api.Configurations;
+using TechNews.Auth.Api.Services.Cryptography;
 using TechNews.Auth.Api.Services.KeyRetrievers;
 
 namespace TechNews.Auth.Api.Services;
@@ -18,7 +19,7 @@ public class KeyRotatorBackgroundService : IHostedService, IDisposable
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        _timer = new Timer(ExecuteProcess, null, TimeSpan.Zero, TimeSpan.FromMinutes(EnvironmentVariables.KeyRotatorExecutionInMinutes));
+        _timer = new Timer(async _ => await ExecuteProcessAsync(), null, TimeSpan.Zero, TimeSpan.FromMinutes(EnvironmentVariables.KeyRotatorExecutionInMinutes));
         return Task.CompletedTask;
     }
 
@@ -36,7 +37,7 @@ public class KeyRotatorBackgroundService : IHostedService, IDisposable
         _timer?.Dispose();
     }
 
-    private void ExecuteProcess(object? state)
+    private async Task ExecuteProcessAsync()
     {
         if (_isProcessing)
         {
@@ -50,14 +51,14 @@ public class KeyRotatorBackgroundService : IHostedService, IDisposable
         using var scope = _serviceScopeFactory.CreateScope();
         var keyRetrieverService = scope.ServiceProvider.GetRequiredService<ICryptographicKeyRetriever>();
 
-        var existingKey = keyRetrieverService.GetExistingKey();
+        var existingKey = await keyRetrieverService.GetExistingKeyAsync();
         var isKeyValid = existingKey?.IsValid() ?? false;
 
         if (!isKeyValid)
         {
-            var newKey = scope.ServiceProvider.GetRequiredService<ICryptographicKey>();
-            existingKey = newKey.CreateKey();
-            keyRetrieverService.StoreKey(existingKey);
+            var factory = scope.ServiceProvider.GetRequiredService<ICryptographicKeyFactory>();
+            existingKey = factory.CreateKey();
+            await keyRetrieverService.StoreKeyAsync(existingKey);
         }
 
         if (existingKey is null)
