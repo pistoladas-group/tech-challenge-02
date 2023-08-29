@@ -22,6 +22,7 @@ jobs:
           inlineScript: |
             az container create \
             --resource-group rg-tech-challenge-02 \
+            --assign-identity \
             --environment-variables \
             TECHNEWS_AUTH_API_DATABASE_CONNECTION_STRING="Server=tcp:dbstechnews.database.windows.net,1433;Initial Catalog=TechNewsAuth;Persist Security Info=False;User ID=${{ secrets.DATABASE_USERNAME }};Password=${{ secrets.DATABASE_PASSWORD }};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;pooling=true" \
             AZURE_KEY_VAULT_URL="https://npvaulttechnews.vault.azure.net/" \
