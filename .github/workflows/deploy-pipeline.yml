@@ -49,6 +49,16 @@ jobs:
           echo "API is not Healthy"
           exit 1
         fi
+
+  deploy-core-container:
+    runs-on: ubuntu-latest
+    needs: [deploy-auth-container]
+    steps:
+    - name: Azure Login
+      id: login
+      uses: Azure/login@v1.4.6
+      with:
+        creds: ${{secrets.AZURE_CREDENTIALS}}
         
     - name: Deploy TechNews Core Container
       uses: azure/cli@v1
@@ -83,6 +93,16 @@ jobs:
           exit 1
         fi
 
+  deploy-web-container:
+    runs-on: ubuntu-latest
+    needs: [deploy-auth-container, deploy-core-container]
+    steps:
+    - name: Azure Login
+      id: login
+      uses: Azure/login@v1.4.6
+      with:
+        creds: ${{secrets.AZURE_CREDENTIALS}}
+        
     - name: Deploy TechNews Web Container
       uses: azure/cli@v1
       with:
