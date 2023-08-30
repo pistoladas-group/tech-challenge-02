@@ -16,10 +16,11 @@ public class NewsController : Controller
 
     public IActionResult Index()
     {
+        //TODO: pegar as notícias da API
         var model = new List<News> {
             new News {
+                Id = Guid.NewGuid(),
                 Title = "Notíciazinha quente",
-                SubtTitle = "Aquele subtítulo maroto",
                 Description = "çlasdjf çlasjdf lajsdlçfj asljdf lçasjdf asdjfaslkdjflasjdf asl jdfl ajsdlçkjf alsçdj flçasjdl fjasd f",
                 ImageSource = "https://picsum.photos/200",
                 PublishDate = new DateTime(2023, 08, 01, 10, 30, 00),
@@ -30,8 +31,8 @@ public class NewsController : Controller
                 },
             },
             new News {
+                Id = Guid.NewGuid(),
                 Title = "Outra notíciazinha top",
-                SubtTitle = "Aquele subtítulo maroto",
                 Description = "çlasdjf çlasjdf lajsdlçfj asljdf lçasjdf asdjfaslkdjflasjdf asl jdfl ajsdlçkjf alsçdj flçasjdl fjasd f",
                 ImageSource = "https://picsum.photos/200",
                 PublishDate = new DateTime(2023, 07, 15, 12, 00, 00),
@@ -42,8 +43,8 @@ public class NewsController : Controller
                 },
             },
             new News {
+                Id = Guid.NewGuid(),
                 Title = "Outra notíciazinha quentíssima",
-                SubtTitle = "Aquele arrmaria maina nã",
                 Description = "çlasdjf çlasjdf lajsdlçfj asljdf lçasjdf asdjfaslkdjflasjdf asl jdfl ajsdlçkjf alsçdj flçasjdl fjasd f",
                 ImageSource = "https://picsum.photos/200",
                 PublishDate = new DateTime(2023, 07, 15, 12, 00, 00),
@@ -54,8 +55,8 @@ public class NewsController : Controller
                 },
             },
             new News {
+                Id = Guid.NewGuid(),
                 Title = "Outra notíciazinha quentíssima",
-                SubtTitle = "Aquele arrmaria maina nã",
                 Description = "çlasdjf çlasjdf lajsdlçfj asljdf lçasjdf asdjfaslkdjflasjdf asl jdfl ajsdlçkjf alsçdj flçasjdl fjasd f",
                 ImageSource = "https://picsum.photos/200",
                 PublishDate = new DateTime(2023, 07, 15, 12, 00, 00),
@@ -70,10 +71,12 @@ public class NewsController : Controller
         return View(model);
     }
 
-    public IActionResult Detail()
+    public IActionResult Detail(Guid id)
     {
+        //TODO: pegar a notícia da API
         var model = new News
         {
+            Id = Guid.NewGuid(),
             Title = "Notíciazinha quente",
             Description = @"Mussum Ipsum, cacilds vidis litro abertis.  Suco de cevadiss, é um leite divinis, qui tem lupuliz, matis, aguis e fermentis. Si num tem leite então bota uma pinga aí cumpadi! Detraxit consequat et quo num tendi nada. Praesent malesuada urna nisi, quis volutpat erat hendrerit non. Nam vulputate dapibus.
 Suco de cevadiss, é um leite divinis, qui tem lupuliz, matis, aguis e fermentis. Quem manda na minha terra sou euzis! Interagi no mé, cursus quis, vehicula ac nisi. Viva Forevis aptent taciti sociosqu ad litora torquent.
