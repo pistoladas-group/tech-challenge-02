@@ -1,7 +1,14 @@
+using TechNews.Web.Configurations;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services
+        .AddHttpClient()
+        .AddAuthConfiguration()
+        .AddEnvironmentVariables(builder.Environment)
+        .ConfigureDependencyInjections()
+        .AddControllersWithViews(options => options.Filters.AddFilterConfiguration());
 
 var app = builder.Build();
 
@@ -11,7 +18,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization();
+app.UseAuthConfiguration();
 
 app.MapControllerRoute(
     name: "default",

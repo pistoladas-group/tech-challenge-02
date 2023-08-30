@@ -1,7 +1,9 @@
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TechNews.Common.Library;
+using Microsoft.EntityFrameworkCore;
+using TechNews.Common.Library.Models;
+using TechNews.Core.Api.Data;
 
 namespace TechNews.Core.Api.Controllers;
 
@@ -9,6 +11,12 @@ namespace TechNews.Core.Api.Controllers;
 [Route("api/news")]
 public class NewsController : ControllerBase
 {
+    public ApplicationDbContext _context { get; set; }
+    public NewsController(ApplicationDbContext context)
+    {
+        _context = context;
+    }
+
     /// <summary>
     /// Get all news
     /// </summary>
@@ -21,7 +29,8 @@ public class NewsController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.InternalServerError)]
     public async Task<IActionResult> GetAllNews()
     {
-        return Ok(new ApiResponse());
+        var teste = _context.News.AsNoTracking().ToList();
+        return Ok(new ApiResponse(data: teste));
     }
 
     /// <summary>

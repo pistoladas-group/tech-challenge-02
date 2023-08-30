@@ -1,18 +1,32 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using TechNews.Web.Models;
 
 namespace TechNews.Web.Controllers;
 
+[Authorize]
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(IHttpContextAccessor httpContextAccessor)
     {
-        _logger = logger;
+        _httpContextAccessor = httpContextAccessor;
     }
 
+    [AllowAnonymous]
     public IActionResult Index()
     {
-        return View();
+        var model = new UserModel
+        {
+            IsAuthenticated = _httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated ?? false
+        };
+
+        if (model.IsAuthenticated)
+        {
+            model.UserName = _httpContextAccessor.HttpContext?.User?.Claims.FirstOrDefault(x => x.Type.Equals("name", StringComparison.OrdinalIgnoreCase))?.Value ?? string.Empty;
+        }
+
+        return View(model);
     }
 }

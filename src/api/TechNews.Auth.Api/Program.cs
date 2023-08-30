@@ -1,4 +1,5 @@
 using TechNews.Auth.Api.Configurations;
+using TechNews.Auth.Api.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,13 +12,16 @@ builder.Services
         .AddLoggingConfiguration(builder.Host)
         .ConfigureIdentity()
         .ConfigureDatabase()
-        .ConfigureDependencyInjections();
+        .ConfigureDependencyInjections()
+        .AddHealthChecks();
 
 var app = builder.Build();
 
 app.UseSwaggerConfiguration();
 app.UseHsts();
 app.UseHttpsRedirection();
+app.UseMiddleware<ResponseHeaderMiddleware>();
 app.UseIdentityConfiguration();
 app.MapControllers();
+app.MapHealthChecks("/health");
 app.Run();

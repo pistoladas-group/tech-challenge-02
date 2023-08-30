@@ -11,7 +11,8 @@ builder.Services
         .AddLoggingConfiguration(builder.Host)
         .ConfigureDatabase()
         .ConfigureDependencyInjections()
-        .AddAuthConfiguration();
+        .AddAuthConfiguration()
+        .AddHealthChecks();
 
 var app = builder.Build();
 
@@ -19,4 +20,5 @@ app.UseSwaggerConfiguration();
 app.UseHttpsRedirection();
 app.UseAuthConfiguration();
 app.MapControllers();
+app.MapHealthChecks("/health");
 app.Run();

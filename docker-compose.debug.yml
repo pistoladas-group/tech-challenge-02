@@ -76,6 +76,7 @@ services:
             LANG: pt_BR.UTF-8
             ASPNETCORE_Kestrel__Certificates__Default__Password: OVmTv9lykb0)>m=wWcQaJ
             ASPNETCORE_Kestrel__Certificates__Default__Path: /https/technews.pfx
+            TECHNEWS_APP_API_AUTH_URL: https://localhost:7279
         volumes:
             - ~/.aspnet/https:/https:ro
         depends_on:

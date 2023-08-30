@@ -15,6 +15,7 @@ public class RegisterUserRequestModel
     /// </summary>
     [Required(ErrorMessage = "The {0} field is mandatory")]
     [EmailAddress(ErrorMessage = "The {0} field is invalid")]
+    [MaxLength(256, ErrorMessage = "The {0} field must have a maximum length of {1} characters")]
     public string Email { get; set; } = string.Empty;
 
     /// <summary>
@@ -22,6 +23,8 @@ public class RegisterUserRequestModel
     /// abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@
     /// </summary>
     [Required(ErrorMessage = "The {0} field is mandatory")]
+    [MaxLength(256, ErrorMessage = "The {0} field must have a maximum length of {1} characters")]
+    [RegularExpression("^[a-zA-Z0-9-._@]*$", ErrorMessage = "The {0} field has invalid characters")]
     public string UserName { get; set; } = string.Empty;
 
     /// <summary>
@@ -34,8 +37,8 @@ public class RegisterUserRequestModel
     /// </summary>
     [Required(ErrorMessage = "The {0} field is mandatory")]
     [MinLength(8, ErrorMessage = "The {0} field must have at least {1} characters")]
-    //TODO: ajustar regex
-    //[RegularExpression("((\\d)([a-z])([A-Z])(\\W))", ErrorMessage = "The {0} field must have at least one digit, one lowercase, one uppercase and a special character")]
+    [MaxLength(128, ErrorMessage = "The {0} field must have a maximum length of {1} characters")]
+    [RegularExpression(@"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).+$", ErrorMessage = "The {0} field must have at least one digit, one lowercase, one uppercase and a special character")]
     public string Password { get; set; } = string.Empty;
 
     /// <summary>
@@ -43,6 +46,7 @@ public class RegisterUserRequestModel
     /// </summary>
     [Required(ErrorMessage = "The {0} field is mandatory")]
     [MinLength(8, ErrorMessage = "The {0} field must have at least {1} characters")]
+    [MaxLength(128, ErrorMessage = "The {0} field must have a maximum length of {1} characters")]
     [Compare("Password", ErrorMessage = "The passwords does not match")]
     public string Repassword { get; set; } = string.Empty;
 }
