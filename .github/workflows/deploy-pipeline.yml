@@ -40,6 +40,35 @@ jobs:
             --registry-password ${{ secrets.REGISTRY_PASSWORD }} \
             --name technews-auth-api-container \
             --image acrtechnews.azurecr.io/technews-auth-api:v1
+    
+    - name: Grant Access to Key Vault
+      uses: azure/cli@v1
+      with:
+          max_attempts: 1
+          retry_on: error
+          azcliversion: latest
+          inlineScript: |
+            response=$(az container show \
+            --resource-group rg-tech-challenge-02 \
+            --name technews-auth-api-container \
+            --query identity --output json)
+
+            assignee_object_id=$(echo "$response" | jq -r '.principalId')
+
+            az role assignment create \
+            --role "Key Vault Administrator" \
+            --assignee-principal-type ServicePrincipal \
+            --assignee-object-id "$assignee_object_id" \
+            --scope /subscriptions/5d17a1d6-e7cf-4fb4-978f-701807e9dd06/resourceGroups/rg-tech-challenge-02/providers/Microsoft.KeyVault/vaults/npvaulttechnews
+
+    - name: Restart Container
+      uses: azure/cli@v1
+      with:
+          max_attempts: 1
+          retry_on: error
+          azcliversion: latest
+          inlineScript: |
+            az container restart --name technews-auth-api-container  --resource-group rg-tech-challenge-02
 
     - name: Health Check Auth
       run: |
