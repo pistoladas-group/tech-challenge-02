@@ -37,7 +37,7 @@ public class AccountController : Controller
     {
         var client = _httpFactory.CreateClient();
         var content = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
-        var uri = $"{EnvironmentVariables.ApiBaseUrl}/api/auth/user";
+        var uri = $"{EnvironmentVariables.ApiAuthBaseUrl}/api/auth/user";
 
         var apiResponse = await client.PostAsync(uri, content);
 
@@ -92,7 +92,7 @@ public class AccountController : Controller
     {
         var client = _httpFactory.CreateClient();
         var content = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
-        var uri = $"{EnvironmentVariables.ApiBaseUrl}/api/auth/user/login";
+        var uri = $"{EnvironmentVariables.ApiAuthBaseUrl}/api/auth/user/login";
 
         var apiResponse = await client.PostAsync(uri, content);
 
@@ -164,7 +164,7 @@ public class AccountController : Controller
     {
         var claims = new List<Claim>();
         claims.AddRange(token.Claims);
-        claims.Add(new Claim("JWT", "Access Token JWT"));
+        claims.Add(new Claim("JWT", token.RawData));
 
         return new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
     }
