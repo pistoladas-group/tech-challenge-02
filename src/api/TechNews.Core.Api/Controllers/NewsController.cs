@@ -22,25 +22,25 @@ public class NewsController : ControllerBase
     /// </summary>
     /// <response code="200">Returns the resource data</response>
     /// <response code="500">There was an internal problem</response>
-    [Authorize]
+    [AllowAnonymous]
     [HttpGet("")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.InternalServerError)]
-    public async Task<IActionResult> GetAllNews()
+    public async Task<IActionResult> GetAllNewsAsync()
     {
-        var teste = _context.News.AsNoTracking().ToList();
-        return Ok(new ApiResponse(data: teste));
+        var news = await _context.News.Include(x => x.Author).AsNoTracking().ToListAsync();
+        return Ok(new ApiResponse(data: news));
     }
 
     /// <summary>
     /// Get news by id
     /// </summary>
     /// <response code="200">Returns the resource data</response>
-    /// <response code="400">The resource was not found</response>
-    /// <response code="404">There is a problem with the request</response>
+    /// <response code="400">There is a problem with the request</response>
+    /// <response code="404">The resource was not found</response>
     /// <response code="500">There was an internal problem</response>
-    [Authorize]
+    [AllowAnonymous]
     [HttpGet("{newsId:guid}")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.OK)]
@@ -49,6 +49,18 @@ public class NewsController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.InternalServerError)]
     public async Task<IActionResult> GetNewsById([FromRoute] Guid newsId)
     {
-        return Ok(new ApiResponse());
+        if (newsId == Guid.Empty)
+        {
+            return BadRequest(new ApiResponse());
+        }
+
+        var news = await _context.News.Include(x => x.Author).AsNoTracking().FirstOrDefaultAsync(x => x.Id == newsId);
+
+        if (news is null)
+        {
+            return NotFound(new ApiResponse());
+        }
+
+        return Ok(new ApiResponse(data: news));
     }
 }

@@ -34,7 +34,7 @@ public static class Database
 
         dbContext.Database.Migrate();
 
-        dbContext.RemoveRange(dbContext.Authors.ToList());
+        dbContext.RemoveRange(dbContext.News.ToList());
         dbContext.RemoveRange(dbContext.Authors.ToList());
 
         var authorsData = new List<Author>

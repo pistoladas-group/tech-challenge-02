@@ -1,8 +1,10 @@
+using System.Text.Json.Serialization;
 using TechNews.Core.Api.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers(options => options.Filters.ConfigureFilters());
+builder.Services.AddControllers(options => options.Filters.ConfigureFilters())
+                .AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services
         .AddEndpointsApiExplorer()
