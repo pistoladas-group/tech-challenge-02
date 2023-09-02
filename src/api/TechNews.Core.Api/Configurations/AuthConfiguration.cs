@@ -24,7 +24,7 @@ public static class AuthConfiguration
                     throw new ApplicationException(nameof(retrievalUrl));
                 }
 
-                options.RequireHttpsMetadata = true;
+                options.RequireHttpsMetadata = false;
                 options.SaveToken = true;
 
                 var httpClient = new HttpClient(options.BackchannelHttpHandler ?? new HttpClientHandler())
