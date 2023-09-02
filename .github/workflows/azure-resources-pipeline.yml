@@ -18,12 +18,12 @@ jobs:
       with:
         creds: ${{secrets.AZURE_CREDENTIALS}}
 
-    - name: Deploy Resources Template
+    - name: Deploy Container Registry
       uses: azure/arm-deploy@v1
       with:
         subscriptionId: 5d17a1d6-e7cf-4fb4-978f-701807e9dd06
         resourceGroupName: rg-tech-challenge-02
-        template: ./azure/arm-templates/resource/template.json
+        template: ./azure/arm-templates/resource/acr-template.json
         parameters: ./azure/arm-templates/resource/parameters.json
 
     - name: Set ACR Anonymous Pull
@@ -33,6 +33,14 @@ jobs:
         inlineScript: |
           az acr update --name acrtechnews --anonymous-pull-enabled true
 
+    - name: Deploy Key Vault
+      uses: azure/arm-deploy@v1
+      with:
+        subscriptionId: 5d17a1d6-e7cf-4fb4-978f-701807e9dd06
+        resourceGroupName: rg-tech-challenge-02
+        template: ./azure/arm-templates/resource/key-vault-template.json
+        parameters: ./azure/arm-templates/resource/parameters.json
+
     - name: Upload Vault Secrets
       uses: azure/cli@v1
       with:
@@ -41,6 +49,14 @@ jobs:
           az keyvault secret set --vault-name $VAULT_NAME --name administratorLogin --value ${{secrets.ADMIN_LOGIN}}
           az keyvault secret set --vault-name $VAULT_NAME --name administratorLoginPassword --value ${{secrets.ADMIN_PASSWORD}}
           az keyvault secret set --vault-name $VAULT_NAME --name clientIpValue --value ${{secrets.CLIENT_IP}}
+
+    - name: Deploy Blob Storage
+      uses: azure/arm-deploy@v1
+      with:
+        subscriptionId: 5d17a1d6-e7cf-4fb4-978f-701807e9dd06
+        resourceGroupName: rg-tech-challenge-02
+        template: ./azure/arm-templates/resource/storage-template.json
+        parameters: ./azure/arm-templates/resource/parameters.json
 
     - name: Deploy TechNewsAuth Database Template
       uses: azure/arm-deploy@v1
