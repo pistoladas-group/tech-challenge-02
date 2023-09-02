@@ -36,8 +36,8 @@ jobs:
             --ip-address Public \
             --dns-name-label technews-auth-api \
             --registry-login-server acrtechnews.azurecr.io \
-            --registry-username ${{ secrets.REGISTRY_USERNAME }} \
-            --registry-password ${{ secrets.REGISTRY_PASSWORD }} \
+            --registry-username "anonymous" \
+            --registry-password "anonymous" \
             --name technews-auth-api-container \
             --image acrtechnews.azurecr.io/technews-auth-api:v1
     
@@ -108,8 +108,8 @@ jobs:
             --ip-address Public \
             --dns-name-label technews-core-api \
             --registry-login-server acrtechnews.azurecr.io \
-            --registry-username ${{ secrets.REGISTRY_USERNAME }} \
-            --registry-password ${{ secrets.REGISTRY_PASSWORD }} \
+            --registry-username "anonymous" \
+            --registry-password "anonymous" \
             --name technews-core-api-container \
             --image acrtechnews.azurecr.io/technews-core-api:v1
 
@@ -150,7 +150,7 @@ jobs:
             --ip-address Public \
             --dns-name-label technews-web \
             --registry-login-server acrtechnews.azurecr.io \
-            --registry-username ${{ secrets.REGISTRY_USERNAME }} \
-            --registry-password ${{ secrets.REGISTRY_PASSWORD }} \
+            --registry-username "anonymous" \
+            --registry-password "anonymous" \
             --name technews-web-container \
             --image acrtechnews.azurecr.io/technews-web:v1

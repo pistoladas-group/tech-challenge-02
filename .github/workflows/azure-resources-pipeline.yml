@@ -26,6 +26,13 @@ jobs:
         template: ./azure/arm-templates/resource/template.json
         parameters: ./azure/arm-templates/resource/parameters.json
 
+    - name: Set ACR Anonymous Pull
+      uses: azure/cli@v1
+      with:
+        azcliversion: latest
+        inlineScript: |
+          az acr update --name acrtechnews --anonymous-pull-enabled true
+
     - name: Upload Vault Secrets
       uses: azure/cli@v1
       with:
