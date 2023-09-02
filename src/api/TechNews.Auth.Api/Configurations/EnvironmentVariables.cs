@@ -12,6 +12,8 @@ public static class EnvironmentVariables
     public static int KeyRotatorExecutionInMinutes { get; private set; }
     public static int KeyCreationSizeInBits { get; private set; }
     public static int KeyExpirationInDays { get; private set; }
+    public static string? CryptographicAlgorithm { get; private set; }
+    public static string AzureKeyVaultUrl { get; private set; } = string.Empty;
 
     public static IServiceCollection AddEnvironmentVariables(this IServiceCollection services, IWebHostEnvironment environment)
     {
@@ -46,6 +48,8 @@ public static class EnvironmentVariables
         DatabaseConnectionString = Environment.GetEnvironmentVariable("TECHNEWS_AUTH_API_DATABASE_CONNECTION_STRING");
         DiscordWebhookId = Environment.GetEnvironmentVariable("TECHNEWS_AUTH_API_DISCORD_WEBHOOK_ID");
         DiscordWebhookToken = Environment.GetEnvironmentVariable("TECHNEWS_AUTH_API_DISCORD_WEBHOOK_TOKEN");
+        CryptographicAlgorithm = Environment.GetEnvironmentVariable("CRYPTOGRAPHIC_ALGORITHM");
+        AzureKeyVaultUrl = Environment.GetEnvironmentVariable("AZURE_KEY_VAULT_URL") ?? string.Empty;
 
         int.TryParse(Environment.GetEnvironmentVariable("TOKEN_EXPIRATION_IN_MINUTES"), out var parsedExpiration);
         TokenExpirationInMinutes = parsedExpiration;

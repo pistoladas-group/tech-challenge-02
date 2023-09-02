@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using TechNews.Auth.Api.Data;
 using TechNews.Auth.Api.Models;
-using TechNews.Auth.Api.Services;
 using TechNews.Auth.Api.Configurations;
 using TechNews.Common.Library.Models;
+using TechNews.Auth.Api.Services.KeyRetrievers;
 
 namespace TechNews.Auth.Api.Controllers;
 
@@ -17,13 +17,13 @@ public class AuthController : ControllerBase
 {
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
-    private readonly RsaTokenSigner _rsaTokenSigner;
+    private readonly ICryptographicKeyRetriever _cryptographicKeyRetriever;
 
-    public AuthController(UserManager<User> userManager, SignInManager<User> signInManager, RsaTokenSigner crypto)
+    public AuthController(UserManager<User> userManager, SignInManager<User> signInManager, ICryptographicKeyRetriever cryptographicKeyRetriever)
     {
         _userManager = userManager;
         _signInManager = signInManager;
-        _rsaTokenSigner = crypto;
+        _cryptographicKeyRetriever = cryptographicKeyRetriever;
     }
 
     /// <summary>
@@ -39,7 +39,7 @@ public class AuthController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.Created)]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.InternalServerError)]
-    public async Task<IActionResult> RegisterUser([FromBody] RegisterUserRequestModel user)
+    public async Task<IActionResult> RegisterUserAsync([FromBody] RegisterUserRequestModel user)
     {
         var id = user.Id ?? Guid.NewGuid();
 
@@ -66,7 +66,7 @@ public class AuthController : ControllerBase
 
         var claims = await GetUserClaims(registeredUserResult);
 
-        var token = GetToken(claims, registeredUserResult);
+        var token = await GetTokenAsync(claims, registeredUserResult);
 
         if (token is null)
         {
@@ -130,7 +130,7 @@ public class AuthController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.Forbidden)]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.InternalServerError)]
-    public async Task<IActionResult> Login([FromBody] LoginRequestModel user)
+    public async Task<IActionResult> LoginAsync([FromBody] LoginRequestModel user)
     {
         var registeredUserResult = await _userManager.FindByEmailAsync(user.Email);
 
@@ -153,7 +153,7 @@ public class AuthController : ControllerBase
 
         var claims = await GetUserClaims(registeredUserResult);
 
-        var token = GetToken(claims, registeredUserResult);
+        var token = await GetTokenAsync(claims, registeredUserResult);
 
         if (token is null)
         {
@@ -163,7 +163,7 @@ public class AuthController : ControllerBase
         return Ok(new ApiResponse(data: token));
     }
 
-    private AccessTokenResponse? GetToken(ClaimsIdentity claims, User user)
+    private async Task<AccessTokenResponse?> GetTokenAsync(ClaimsIdentity claims, User user)
     {
         var tokenClaims = new List<Claim>
         {
@@ -177,9 +177,9 @@ public class AuthController : ControllerBase
 
         claims.AddClaims(tokenClaims);
 
-        var signingCredentials = _rsaTokenSigner.GetSigningCredentials();
+        var key = await _cryptographicKeyRetriever.GetExistingKeyAsync();
 
-        if (signingCredentials is null)
+        if (key is null)
         {
             return null;
         }
@@ -194,7 +194,7 @@ public class AuthController : ControllerBase
             Subject = claims,
             Expires = DateTime.UtcNow.AddMinutes(EnvironmentVariables.TokenExpirationInMinutes),
             TokenType = tokenType,
-            SigningCredentials = signingCredentials
+            SigningCredentials = key.GetSigningCredentials()
         });
 
         var jwt = tokenHandler.WriteToken(token);

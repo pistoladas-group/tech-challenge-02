@@ -22,8 +22,10 @@ jobs:
           inlineScript: |
             az container create \
             --resource-group rg-tech-challenge-02 \
+            --assign-identity \
             --environment-variables \
             TECHNEWS_AUTH_API_DATABASE_CONNECTION_STRING="Server=tcp:dbstechnews.database.windows.net,1433;Initial Catalog=TechNewsAuth;Persist Security Info=False;User ID=${{ secrets.DATABASE_USERNAME }};Password=${{ secrets.DATABASE_PASSWORD }};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;pooling=true" \
+            AZURE_KEY_VAULT_URL="https://npvaulttechnews.vault.azure.net/" \
             ASPNETCORE_URLS="http://+:5138" \
             TOKEN_EXPIRATION_IN_MINUTES="${{ vars.TOKEN_EXPIRATION_IN_MINUTES }}" \
             KEY_ROTATOR_EXECUTION_IN_MINUTES="${{ vars.KEY_ROTATOR_EXECUTION_IN_MINUTES }}" \
@@ -38,6 +40,35 @@ jobs:
             --registry-password ${{ secrets.REGISTRY_PASSWORD }} \
             --name technews-auth-api-container \
             --image acrtechnews.azurecr.io/technews-auth-api:v1
+    
+    - name: Grant Access to Key Vault
+      uses: azure/cli@v1
+      with:
+          max_attempts: 1
+          retry_on: error
+          azcliversion: latest
+          inlineScript: |
+            response=$(az container show \
+            --resource-group rg-tech-challenge-02 \
+            --name technews-auth-api-container \
+            --query identity --output json)
+
+            assignee_object_id=$(echo "$response" | jq -r '.principalId')
+
+            az role assignment create \
+            --role "Key Vault Administrator" \
+            --assignee-principal-type ServicePrincipal \
+            --assignee-object-id "$assignee_object_id" \
+            --scope /subscriptions/5d17a1d6-e7cf-4fb4-978f-701807e9dd06/resourceGroups/rg-tech-challenge-02/providers/Microsoft.KeyVault/vaults/npvaulttechnews
+
+    - name: Restart Container
+      uses: azure/cli@v1
+      with:
+          max_attempts: 1
+          retry_on: error
+          azcliversion: latest
+          inlineScript: |
+            az container restart --name technews-auth-api-container  --resource-group rg-tech-challenge-02
 
     - name: Health Check Auth
       run: |

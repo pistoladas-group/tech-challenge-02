@@ -33,8 +33,31 @@ public class JsonWebKeyModel
     public string? Use { get; set; }
 
     [JsonPropertyName("n")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Modulus { get; set; }
 
     [JsonPropertyName("e")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Exponent { get; set; }
+
+    /// <summary>
+    /// The base64url encoded of the bytes of the X coordinate of the Elliptic Curve
+    /// </summary>
+    [JsonPropertyName("x")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? XAxis { get; set; }
+
+    /// <summary>
+    /// The base64url encoded of the bytes of the Y coordinate of the Elliptic Curve
+    /// </summary>
+    [JsonPropertyName("y")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? YAxis { get; set; }
+
+    /// <summary>
+    /// The name of the Ellipitic Curve used as algorithm for the cryptography
+    /// </summary>
+    [JsonPropertyName("crv")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? Curve { get; set; }
 }

@@ -8,7 +8,7 @@ public class ModelStateFilter : IActionFilter
 {
     public void OnActionExecuting(ActionExecutingContext context)
     {
-        if (context.Result != null)
+        if (context.Result is not null)
         {
             return;
         }
