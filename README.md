@@ -96,7 +96,7 @@ A camada de <b>Controllers</b> direciona o fluxo das requisições. É responsá
 
 A camada de <b>Data</b> se integra com classes do Identity (User e Role) e com o Entity Framework para mapeamento de dados.
 
-A camada de <b>Services</b> possui serviços com responsabilidades diversas como: gerenciar (buscar ou persistir) a chave privada no Azure Key Vault, assinar um token digitalmente com criptografia RSA e a criação da chave assimétrica através de criptografia RSA.
+A camada de <b>Services</b> possui serviços com responsabilidades diversas como: gerenciar (buscar ou persistir) a chave privada no Azure Key Vault, assinar um token digitalmente com criptografia RSA ou ECC e a criação da chave assimétrica através de criptografia RSA ou ECC.
 
 O <b>Background Service</b> que vemos abaixo é uma parte da camada de serviços. Ele constitui uma solução simples para a rotação da chave privada que gera os tokens. O ideal é possuir uma solução mais robusta, consistindo em uma aplicação que gerencia a rotação da chave para todas as instâncias de aplicações que a utilizam.
 
@@ -142,10 +142,10 @@ A orquestração do fluxo de autenticação do Tech News foi fundamentada na doc
 
 
 
-## Rotação das Chaves
+## Rotação / Gerenciamento das Chaves
 Para a rotação da chave privada optamos por uma solução simples para o tech challenge, um <b>background service</b>. O ideal seria uma solução mais robusta, consistindo em uma aplicação que gerencia a rotação da chave para todas as instâncias de aplicações que a utilizam. 
 
-O serviço rotaciona a chave privada a cada X dias (parametrizado por variável). Utiliza-se o algoritmo de criptografia assimétrica [RSA](https://pt.wikipedia.org/wiki/RSA_(sistema_criptogr%C3%A1fico)) para a criação de uma nova chave. 
+O serviço rotaciona a chave privada a cada X dias (parametrizado por variável). Utiliza-se o algoritmo de criptografia assimétrica [RSA](https://pt.wikipedia.org/wiki/RSA_(sistema_criptogr%C3%A1fico)) ou [ECC (Elliptic Curve Cryptography)](https://pt.wikipedia.org/wiki/Criptografia_de_curva_el%C3%ADptica) para a criação de uma nova chave. 
 
 Os parâmetros privados da chave são persistidos no Azure Key Vault, enquanto os parâmetros públicos são encapsulados em um JWK (Json Web Key) e expostos em uma URL com uma lista de JWKS (Json Web Key Set). Por exemplo <b>url-api/jwks</b>. 
 
@@ -174,7 +174,7 @@ O pipeline de <b>Build</b> assume o papel de Integração Contínua (CI), realiz
 
 O pipeline de <b>Deploy</b> assume o papel de Entrega Contínua (CD), criando as instâncias dos containers no Azure Container Instance com base nas imagens do Container Registry.
 
-<!-- TODO: - Database scripts ou Migrations -->
+As migrations do banco são realizadas por cada aplicação (Auth API e Core API), no momento em que a aplicação é executada no container. Isso garante que as bases estão atualizadas automaticamente através das migrations do Entity Framework. Também existe a opção de executar os scripts gerados manualmente. Eles se encontram na pasta "sql".
 
 # Executando a aplicação
 É possível executar a aplicação realizando a configuração manualmente, ou utilizando Docker (recomendado).
