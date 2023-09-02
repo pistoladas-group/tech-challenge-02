@@ -190,7 +190,7 @@ public class AuthController : ControllerBase
 
         var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
         {
-            Issuer = $"https://{HttpContext.Request.Host.Value}",
+            Issuer = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}",
             Subject = claims,
             Expires = DateTime.UtcNow.AddMinutes(EnvironmentVariables.TokenExpirationInMinutes),
             TokenType = tokenType,
