@@ -23,7 +23,7 @@ public static class DependencyInjections
         }
 
         // Singletons
-        services.AddSingleton<ICryptographicKeyRetriever, CryptographicKeyInMemoryRetriever>();
+        services.AddSingleton<ICryptographicKeyRetriever, CryptographicKeyAzureVaultRetriever>();
 
         // Background Services
         services.AddHostedService<KeyRotatorBackgroundService>();
