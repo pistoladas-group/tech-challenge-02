@@ -38,7 +38,7 @@ jobs:
       - name: Check Resource Existence
         id: check-resource
         run: |
-          if az resource show --resource-group "rg-tech-challenge-02" --name "acrtechnews" --resource-type "Microsoft.ContainerRegistry/registries" --output none; then
+          if az resource show --resource-group "${{ vars.RESOURCE_GROUP_NAME }}" --name "${{ vars.CONTAINER_REGISTRY_NAME}}" --resource-type "Microsoft.ContainerRegistry/registries" --output none; then
              echo "resource exists"
              echo "::set-output name=resource_exists::true"
           else
@@ -66,7 +66,7 @@ jobs:
         retry_on: error
         azcliversion: latest
         inlineScript: |
-            az acr build --image technews-auth-api:v1 --registry acrtechnews --file ./src/api/TechNews.Auth.Api/Dockerfile .
+            az acr build --image ${{ vars.AUTH_APP_NAME}}:v1 --registry ${{ vars.CONTAINER_REGISTRY_NAME}} --file ./src/api/TechNews.Auth.Api/Dockerfile .
   
   push-core-image:
     runs-on: ubuntu-latest
@@ -89,7 +89,7 @@ jobs:
           retry_on: error
           azcliversion: latest
           inlineScript: |
-            az acr build --image technews-core-api:v1 --registry acrtechnews --file ./src/api/TechNews.Core.Api/Dockerfile .
+            az acr build --image ${{ vars.CORE_APP_NAME}}:v1 --registry ${{ vars.CONTAINER_REGISTRY_NAME}} --file ./src/api/TechNews.Core.Api/Dockerfile .
 
   push-web-image:
     runs-on: ubuntu-latest
@@ -112,4 +112,4 @@ jobs:
           retry_on: error
           azcliversion: latest
           inlineScript: |
-            az acr build --image technews-web:v1 --registry acrtechnews --file ./src/web/TechNews.Web/Dockerfile .
+            az acr build --image ${{ vars.WEB_APP_NAME}}:v1 --registry ${{ vars.CONTAINER_REGISTRY_NAME}} --file ./src/web/TechNews.Web/Dockerfile .

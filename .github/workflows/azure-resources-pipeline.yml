@@ -7,7 +7,7 @@ jobs:
   deploy-resources:
     runs-on: ubuntu-latest
     env:
-      VAULT_NAME: npvaulttechnews
+      VAULT_NAME: ${{ vars.VAULT_NAME }}
     steps:
     - name: Clone Repo
       uses: actions/checkout@v3
@@ -21,8 +21,8 @@ jobs:
     - name: Deploy Container Registry
       uses: azure/arm-deploy@v1
       with:
-        subscriptionId: 5d17a1d6-e7cf-4fb4-978f-701807e9dd06
-        resourceGroupName: rg-tech-challenge-02
+        subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
+        resourceGroupName: ${{ vars.RESOURCE_GROUP_NAME }}
         template: ./azure/arm-templates/resource/acr-template.json
         parameters: ./azure/arm-templates/resource/parameters.json
 
@@ -31,13 +31,13 @@ jobs:
       with:
         azcliversion: latest
         inlineScript: |
-          az acr update --name acrtechnews --anonymous-pull-enabled true
+          az acr update --name ${{ vars.CONTAINER_REGISTRY_NAME }} --anonymous-pull-enabled true
 
     - name: Deploy Key Vault
       uses: azure/arm-deploy@v1
       with:
-        subscriptionId: 5d17a1d6-e7cf-4fb4-978f-701807e9dd06
-        resourceGroupName: rg-tech-challenge-02
+        subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
+        resourceGroupName: ${{ vars.RESOURCE_GROUP_NAME }}
         template: ./azure/arm-templates/resource/key-vault-template.json
         parameters: ./azure/arm-templates/resource/parameters.json
 
@@ -53,23 +53,23 @@ jobs:
     - name: Deploy Blob Storage
       uses: azure/arm-deploy@v1
       with:
-        subscriptionId: 5d17a1d6-e7cf-4fb4-978f-701807e9dd06
-        resourceGroupName: rg-tech-challenge-02
+        subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
+        resourceGroupName: ${{ vars.RESOURCE_GROUP_NAME }}
         template: ./azure/arm-templates/resource/storage-template.json
         parameters: ./azure/arm-templates/resource/parameters.json
 
     - name: Deploy TechNewsAuth Database Template
       uses: azure/arm-deploy@v1
       with:
-        subscriptionId: 5d17a1d6-e7cf-4fb4-978f-701807e9dd06
-        resourceGroupName: rg-tech-challenge-02
+        subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
+        resourceGroupName: ${{ vars.RESOURCE_GROUP_NAME }}
         template: ./azure/arm-templates/database/template.json
         parameters: ./azure/arm-templates/database/parameters-TechNewsAuth.json
 
     - name: Deploy TechNews Database Template
       uses: azure/arm-deploy@v1
       with:
-        subscriptionId: 5d17a1d6-e7cf-4fb4-978f-701807e9dd06
-        resourceGroupName: rg-tech-challenge-02
+        subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
+        resourceGroupName: ${{ vars.RESOURCE_GROUP_NAME }}
         template: ./azure/arm-templates/database/template.json
         parameters: ./azure/arm-templates/database/parameters-TechNews.json
