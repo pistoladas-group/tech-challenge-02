@@ -24,4 +24,5 @@ app.UseMiddleware<ResponseHeaderMiddleware>();
 app.UseIdentityConfiguration();
 app.MapControllers();
 app.MapHealthChecks("/health");
+app.MigrateDatabase();
 app.Run();

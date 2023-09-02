@@ -25,4 +25,3 @@ GO
 
 COMMIT;
 GO
-

@@ -16,6 +16,9 @@ BEGIN
 END
 GO
 
+GRANT CREATE ANY DATABASE TO [tech-news-auth]
+GO
+
 USE TechNewsAuth
 GO
 
@@ -23,4 +26,10 @@ IF NOT EXISTS (SELECT name FROM sys.database_principals WHERE name = 'tech-news-
 BEGIN
     CREATE USER [tech-news-auth] FOR LOGIN [tech-news-auth]
 END
+GO
+
+GRANT CREATE TABLE TO [tech-news-auth]
+GO
+
+GRANT SELECT,UPDATE,INSERT ON SCHEMA::dbo TO [tech-news-auth]
 GO

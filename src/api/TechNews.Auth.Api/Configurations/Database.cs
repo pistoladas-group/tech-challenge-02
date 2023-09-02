@@ -24,4 +24,12 @@ public static class Database
 
         return services;
     }
+
+    public static void MigrateDatabase(this IApplicationBuilder app)
+    {
+        using var scope = app.ApplicationServices.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<AuthDbContext>();
+
+        dbContext.Database.Migrate();
+    }
 }

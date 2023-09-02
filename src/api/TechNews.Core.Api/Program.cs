@@ -20,5 +20,6 @@ app.UseSwaggerConfiguration();
 app.UseHttpsRedirection();
 app.UseAuthConfiguration();
 app.MapControllers();
+app.MigrateDatabase();
 app.MapHealthChecks("/health");
 app.Run();
