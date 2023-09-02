@@ -84,7 +84,7 @@ Caso as credenciais estiverem corretas, a aplicação irá receber um JWT assina
 
 ## Core API
 
-Work in Progress
+Escolhemos uma arquitetura mais simples para a API de notícias, adotado um estilo arquitetural de CRUD.
 
 ## Auth API (Authorization Server)
 
