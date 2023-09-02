@@ -35,7 +35,8 @@ namespace TechNews.Core.Api.Data.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(100)");
+                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnName("Email");
 
                     b.Property<string>("ImageSource")
                         .HasColumnType("VARCHAR(500)");
@@ -46,7 +47,8 @@ namespace TechNews.Core.Api.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(100)");
+                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnName("Name");
 
                     b.HasKey("Id")
                         .HasName("PK_Authors");
@@ -71,7 +73,8 @@ namespace TechNews.Core.Api.Data.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(5000)");
+                        .HasColumnType("VARCHAR(5000)")
+                        .HasColumnName("Description");
 
                     b.Property<string>("ImageSource")
                         .HasColumnType("VARCHAR(500)");
@@ -80,13 +83,14 @@ namespace TechNews.Core.Api.Data.Migrations
                         .HasColumnType("BIT")
                         .HasColumnName("IsDeleted");
 
-                    b.Property<string>("PublishDate")
-                        .IsRequired()
-                        .HasColumnType("VARCHAR(100)");
+                    b.Property<DateTime>("PublishDate")
+                        .HasColumnType("DATETIME")
+                        .HasColumnName("PublishDate");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("VARCHAR(100)");
+                        .HasColumnType("VARCHAR(100)")
+                        .HasColumnName("Title");
 
                     b.HasKey("Id")
                         .HasName("PK_News");

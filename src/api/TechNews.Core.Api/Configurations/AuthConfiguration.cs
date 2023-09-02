@@ -9,7 +9,7 @@ public static class AuthConfiguration
 {
     public static IServiceCollection AddAuthConfiguration(this IServiceCollection services)
     {
-        var retrievalUrl = Environment.GetEnvironmentVariable(EnvironmentVariables.AuthJwksUrl);
+        var retrievalUrl = EnvironmentVariables.AuthJwksUrl;
 
         services
             .AddAuthentication(options =>
@@ -19,12 +19,12 @@ public static class AuthConfiguration
             }).
             AddJwtBearer(options =>
             {
-                if (retrievalUrl == null)
+                if (retrievalUrl is null)
                 {
                     throw new ApplicationException(nameof(retrievalUrl));
                 }
 
-                options.RequireHttpsMetadata = true;
+                options.RequireHttpsMetadata = false;
                 options.SaveToken = true;
 
                 var httpClient = new HttpClient(options.BackchannelHttpHandler ?? new HttpClientHandler())

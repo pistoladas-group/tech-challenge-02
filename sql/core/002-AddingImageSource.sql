@@ -1,4 +1,7 @@
-﻿BEGIN TRANSACTION;
+﻿USE TechNews
+GO
+
+BEGIN TRANSACTION;
 GO
 
 IF NOT EXISTS(SELECT * FROM [_AppliedMigrations] WHERE [MigrationId] = N'20230804220824_AddingImageSource')
@@ -22,4 +25,3 @@ GO
 
 COMMIT;
 GO
-

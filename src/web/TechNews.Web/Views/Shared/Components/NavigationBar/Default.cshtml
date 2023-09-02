@@ -1,15 +1,30 @@
-<nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
-    <div class="container px-4 px-lg-5">
-        <a class="navbar-brand" href="index.html">Tech News</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
-            aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-            Menu
-            <i class="fas fa-bars"></i>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ms-auto py-4 py-lg-0">
-                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="index.html">Entrar</a></li>
-            </ul>
+@model TechNews.Web.Models.UserModel;
+
+<header>
+    <nav class="navbar fixed-top" style="height: 70px; background-color: #18212d">
+        <div class="container">
+            <div class="d-flex justify-content-start">
+                <a class="navbar-brand" href="/">
+                    <img src="~/images/logo/TechNews2.png" alt="" width="200" height="24">
+                </a>
+            </div>
+
+            @if(Model.IsAuthenticated) 
+            {
+                <div class="d-flex justify-content-end">
+                    <span class="text-light mx-2 px-2 mt-2 fw-bold">Olá, @Model.UserName</span>
+                    <a class="btn btn-light" href="/account/logout">Sair</a>
+                </div>
+            }
+
+            @if(!Model.IsAuthenticated) 
+            {
+                <div class="d-flex justify-content-end text-light">
+                    <a class="btn btn-light mx-2" href="/account">Cadastrar</a>
+                    <a class="btn btn-light" href="/account/login">Entrar</a>
+                </div>
+            }
+
         </div>
-    </div>
-</nav>
+    </nav>
+</header>

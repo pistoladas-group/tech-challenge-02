@@ -1,38 +1,43 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model TechNews.Web.Models.UserModel;
+@{
+    ViewData["Title"] = "Tech News - Home";
 }
 
-<div class="container px-4 px-lg-5">
-    <div class="row gx-4 gx-lg-5 justify-content-center">
-        <div class="col-md-10 col-lg-8 col-xl-7">
-            <div class="post-preview">
-                <a href="post.html">
-                    <h2 class="post-title">Man must explore, and this is exploration at its greatest</h2>
-                    <h3 class="post-subtitle">Problems look mighty small from 150 miles up</h3>
-                </a>
-                <p class="post-meta">
-                    Posted by
-                    <a href="#!">Start Bootstrap</a>
-                    on September 24, 2023
+<div class="py-5 rounded">
+    <div class="p-4 p-md-5 mb-4 row">
+        <div class="col-8 px-0">
+            <h1 class="display-4">O servidor das melhores notícias de tecnologia do mundo!</h1>
+            <p class="lead my-3">Desde Agosto de 2023, o Tech News gera as notícias automaticamente utilizando
+                <a class="link-offset-3 link-underline link-underline-opacity-0" href="https://mussumipsum.com/">Mussum
+                    Ipsum</a> para os textos,
+                <a class="link-offset-3 link-underline link-underline-opacity-0"
+                    href="https://picsum.photos/">Picsum</a> para as imagens.
+            </p>
+            <p class="lead my-3">
+                Mussum Ipsum, cacilds vidis litro abertis. Suco de cevadiss deixa as pessoas mais interessantis. Viva
+                Forevis aptent taciti sociosqu ad litora torquent. Vehicula non. Ut sed ex eros. Vivamus sit amet nibh
+                non tellus tristique interdum. Diuretics paradis num copo é motivis de denguis.
+            </p>
+            @if (!Model.IsAuthenticated)
+            {
+                <p class="lead mb-0">
+                    <a href="/account/login" class="fw-bold link-offset-3 link-underline link-underline-opacity-0">Entre</a>
+                    ou
+                    <a href="/account" class="fw-bold link-offset-3 link-underline link-underline-opacity-0">Cadastre-se</a>
+                    para acessar todas as notícias.
                 </p>
-            </div>
-            <hr class="my-4" />
-            <div class="post-preview">
-                <a href="post.html">
-                    <h2 class="post-title">I believe every human has a finite number of heartbeats. I don't intend to
-                        waste any of mine.</h2>
-                </a>
-                <p class="post-meta">
-                    Posted by
-                    <a href="#!">Start Bootstrap</a>
-                    on September 18, 2023
+            }
+            @if (Model.IsAuthenticated)
+            {
+                <p class="lead mb-0">
+                    Clique 
+                    <a href="/news" class="fw-bold link-offset-3 link-underline link-underline-opacity-0">aqui</a>
+                    para acessar todas as notícias.
                 </p>
-            </div>
-
-            <hr class="my-4" />
-
-            <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="#!">Older Posts
-                    →</a></div>
+            }
+        </div>
+        <div class="col-4">
+            <img src="https://picsum.photos/id/48/400" class="img-fluid rounded" alt="imagem notícia">
         </div>
     </div>
 </div>

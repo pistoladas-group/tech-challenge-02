@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using TechNews.Auth.Api.Data;
 using TechNews.Auth.Api.Models;
-using TechNews.Common.Library;
-using TechNews.Auth.Api.Services;
+using TechNews.Auth.Api.Configurations;
+using TechNews.Common.Library.Models;
+using TechNews.Auth.Api.Services.KeyRetrievers;
 
 namespace TechNews.Auth.Api.Controllers;
 
@@ -16,13 +17,13 @@ public class AuthController : ControllerBase
 {
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
-    private readonly RsaTokenSigner _rsaTokenSigner;
+    private readonly ICryptographicKeyRetriever _cryptographicKeyRetriever;
 
-    public AuthController(UserManager<User> userManager, SignInManager<User> signInManager, RsaTokenSigner crypto)
+    public AuthController(UserManager<User> userManager, SignInManager<User> signInManager, ICryptographicKeyRetriever cryptographicKeyRetriever)
     {
         _userManager = userManager;
         _signInManager = signInManager;
-        _rsaTokenSigner = crypto;
+        _cryptographicKeyRetriever = cryptographicKeyRetriever;
     }
 
     /// <summary>
@@ -38,20 +39,41 @@ public class AuthController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.Created)]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.BadRequest)]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.InternalServerError)]
-    public async Task<IActionResult> RegisterUser([FromBody] RegisterUserRequestModel user)
+    public async Task<IActionResult> RegisterUserAsync([FromBody] RegisterUserRequestModel user)
     {
         var id = user.Id ?? Guid.NewGuid();
 
-        //TODO: verificar se j� existe algum usu�rio com aquele id, para evitar exception
+        var existingUser = await _userManager.FindByIdAsync(id.ToString());
+
+        if (existingUser is not null)
+        {
+            return BadRequest(new ApiResponse(error: new ErrorResponse("invalid_request", "UserAlreadyExists", "User already exists")));
+        }
 
         var createUserResult = await _userManager.CreateAsync(new User(id, user.Email, user.UserName), user.Password);
 
         if (!createUserResult.Succeeded)
         {
-            return BadRequest(new ApiResponse(errors: createUserResult.Errors.ToList().ConvertAll(x => x.Description)));
+            return BadRequest(new ApiResponse(errors: createUserResult.Errors.ToList().ConvertAll(x => new ErrorResponse("invalid_request", x.Code, x.Description))));
         }
 
-        return CreatedAtAction(nameof(GetUser), new { userId = id }, new ApiResponse());
+        var registeredUserResult = await _userManager.FindByEmailAsync(user.Email);
+
+        if (registeredUserResult is null)
+        {
+            return StatusCode((int)HttpStatusCode.InternalServerError, new ApiResponse(error: new ErrorResponse("server_error", "InternalError", "There was an unexpected error with the application. Please contact support!")));
+        }
+
+        var claims = await GetUserClaims(registeredUserResult);
+
+        var token = await GetTokenAsync(claims, registeredUserResult);
+
+        if (token is null)
+        {
+            return StatusCode((int)HttpStatusCode.InternalServerError, new ApiResponse(error: new ErrorResponse("server_error", "InternalError", "There was an unexpected error with the application. Please contact support!")));
+        }
+
+        return CreatedAtAction(nameof(GetUser), new { userId = id }, new ApiResponse(data: token));
     }
 
     /// <summary>
@@ -73,14 +95,14 @@ public class AuthController : ControllerBase
     {
         if (userId == Guid.Empty)
         {
-            return BadRequest(new ApiResponse(error: "The userId is not valid"));
+            return BadRequest(new ApiResponse(error: new ErrorResponse("invalid_request", "InvalidUser", "The userId is not valid")));
         }
 
         var getUserResult = await _userManager.FindByIdAsync(userId.ToString());
 
-        if (getUserResult == null)
+        if (getUserResult is null)
         {
-            return NotFound(new ApiResponse(error: "The user was not found"));
+            return NotFound(new ApiResponse(error: new ErrorResponse("invalid_request", "UserNotFound", "The user was not found")));
         }
 
         var responseModel = new GetUserResponseModel
@@ -106,44 +128,48 @@ public class AuthController : ControllerBase
     [Produces("application/json")]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.Created)]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.BadRequest)]
-    [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.NotFound)]
+    [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.Forbidden)]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.InternalServerError)]
-    public async Task<IActionResult> Login([FromBody] LoginRequestModel user)
+    public async Task<IActionResult> LoginAsync([FromBody] LoginRequestModel user)
     {
         var registeredUserResult = await _userManager.FindByEmailAsync(user.Email);
 
-        if (registeredUserResult?.UserName is null)
+        if (registeredUserResult is null || registeredUserResult?.UserName is null)
         {
-            //TODO: mensagem personalizada de erro!
-            return Problem();
+            return BadRequest(new ApiResponse(error: new ErrorResponse("invalid_request", "InvalidRequest", "User or password are invalid")));
         }
 
         var signInResult = await _signInManager.PasswordSignInAsync(registeredUserResult.UserName, user.Password, false, true);
 
         if (signInResult.IsLockedOut)
         {
-            return BadRequest(new ApiResponse(error: "User temporary blocked for invalid attempts"));
+            return StatusCode((int)HttpStatusCode.Forbidden, new ApiResponse(error: new ErrorResponse("unauthorized_client", "LockedUser", "User temporary blocked for invalid attempts")));
         }
 
         if (!signInResult.Succeeded)
         {
-            return BadRequest(new ApiResponse(error: "User or password are invalid"));
+            return BadRequest(new ApiResponse(error: new ErrorResponse("invalid_request", "InvalidRequest", "User or password are invalid")));
         }
 
         var claims = await GetUserClaims(registeredUserResult);
 
-        //TODO: Se token for nulo, retornar 500 Internal Server Error
-        var token = GetToken(claims, registeredUserResult);
+        var token = await GetTokenAsync(claims, registeredUserResult);
+
+        if (token is null)
+        {
+            return StatusCode((int)HttpStatusCode.InternalServerError, new ApiResponse(error: new ErrorResponse("server_error", "InternalError", "There was an unexpected error with the application. Please contact support!")));
+        }
 
         return Ok(new ApiResponse(data: token));
     }
 
-    private string? GetToken(ClaimsIdentity claims, User user)
+    private async Task<AccessTokenResponse?> GetTokenAsync(ClaimsIdentity claims, User user)
     {
         var tokenClaims = new List<Claim>
         {
             new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
+            new(JwtRegisteredClaimNames.Name, user.UserName ?? string.Empty),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new(JwtRegisteredClaimNames.Nbf, ToUnixEpochDate(DateTime.UtcNow).ToString()),
             new(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64)
@@ -151,24 +177,34 @@ public class AuthController : ControllerBase
 
         claims.AddClaims(tokenClaims);
 
-        //TODO: pegar dinamicamente (https) e (host):
-        const string currentIssuer = "https://localhost:7279";
+        var key = await _cryptographicKeyRetriever.GetExistingKeyAsync();
 
-        var signingCredentials = _rsaTokenSigner.GetSigningCredentials();
+        if (key is null)
+        {
+            return null;
+        }
 
-        //TODO: Se signingCredentials for nulo, retornar nulo string? (quer dizer que não existe chave para assinar o token)
+        var tokenType = "at+jwt";
 
         var tokenHandler = new JwtSecurityTokenHandler();
+
         var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
         {
-            Issuer = currentIssuer,
+            Issuer = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}",
             Subject = claims,
-            Expires = DateTime.UtcNow.AddMinutes(10), //TODO: tirar hardcode
-            TokenType = "at+jwt",
-            SigningCredentials = signingCredentials
+            Expires = DateTime.UtcNow.AddMinutes(EnvironmentVariables.TokenExpirationInMinutes),
+            TokenType = tokenType,
+            SigningCredentials = key.GetSigningCredentials()
         });
 
-        return tokenHandler.WriteToken(token);
+        var jwt = tokenHandler.WriteToken(token);
+
+        return new AccessTokenResponse()
+        {
+            AccessToken = jwt,
+            TokenType = tokenType,
+            ExpiresInSeconds = EnvironmentVariables.TokenExpirationInMinutes * 60
+        };
     }
 
     private static long ToUnixEpochDate(DateTime date)

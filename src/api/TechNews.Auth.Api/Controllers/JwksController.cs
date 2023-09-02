@@ -1,9 +1,8 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using TechNews.Auth.Api.Models;
-using TechNews.Common.Library;
-using TechNews.Auth.Api.Services;
+using TechNews.Auth.Api.Services.KeyRetrievers;
+using TechNews.Common.Library.Models;
 
 namespace TechNews.Auth.Api.Controllers;
 
@@ -26,9 +25,9 @@ public class JwksController : ControllerBase
     [Produces("application/json")]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ApiResponse), (int)HttpStatusCode.InternalServerError)]
-    public IActionResult GetJsonWebKeySets()
+    public async Task<IActionResult> GetJsonWebKeySetsAsync()
     {
-        var keys = _cryptographicKeyRetriever.GetLastKeys(2);
+        var keys = await _cryptographicKeyRetriever.GetLastKeysAsync(2);
 
         var result = new JwksResponseModel();
 
@@ -39,17 +38,12 @@ public class JwksController : ControllerBase
 
         foreach (var key in keys)
         {
-            var publicParameters = key.Instance.ExportParameters(false);
+            var jwk = key.GetJsonWebKey();
 
-            result.Keys.Add(new JsonWebKeyModel()
+            if (jwk is not null)
             {
-                KeyType = "RSA", // TODO: Deixar dinâmico
-                KeyId = key.Id.ToString(),
-                Algorithm = "RS256",
-                Use = "sig",
-                Modulus = Base64UrlEncoder.Encode(publicParameters.Modulus),
-                Exponent = Base64UrlEncoder.Encode(publicParameters.Exponent)
-            });
+                result.Keys.Add(jwk);
+            }
         }
 
         return Ok(result);

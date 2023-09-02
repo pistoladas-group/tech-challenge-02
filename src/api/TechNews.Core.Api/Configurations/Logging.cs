@@ -8,8 +8,8 @@ public static class Logging
 {
     public static IServiceCollection AddLoggingConfiguration(this IServiceCollection services, ConfigureHostBuilder host)
     {
-        var webhookId = Convert.ToUInt64(Environment.GetEnvironmentVariable(EnvironmentVariables.DiscordWebhookId));
-        var webhookToken = Environment.GetEnvironmentVariable(EnvironmentVariables.DiscordWebhookToken);
+        var webhookId = Convert.ToUInt64(EnvironmentVariables.DiscordWebhookId);
+        var webhookToken = EnvironmentVariables.DiscordWebhookToken;
         
         host.UseSerilog((_, logConfiguration) => logConfiguration
             .WriteTo.Console(LogEventLevel.Verbose)

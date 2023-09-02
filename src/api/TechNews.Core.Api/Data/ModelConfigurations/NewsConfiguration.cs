@@ -14,9 +14,9 @@ public class NewsConfiguration : IEntityTypeConfiguration<News>
         builder.Property(p => p.Id).HasColumnType("UNIQUEIDENTIFIER").HasColumnName("Id").IsRequired();
         builder.Property(p => p.CreatedAt).HasColumnType("DATETIME").HasColumnName("CreatedAt").IsRequired();
         builder.Property(p => p.IsDeleted).HasColumnType("BIT").HasColumnName("IsDeleted").IsRequired();
-        builder.Property(p => p.Title).HasColumnType("VARCHAR(100)").IsRequired();
-        builder.Property(p => p.Description).HasColumnType("VARCHAR(5000)").IsRequired();
-        builder.Property(p => p.PublishDate).HasColumnType("VARCHAR(100)").IsRequired();
+        builder.Property(p => p.Title).HasColumnType("VARCHAR(100)").HasColumnName("Title").IsRequired();
+        builder.Property(p => p.Description).HasColumnType("VARCHAR(5000)").HasColumnName("Description").IsRequired();
+        builder.Property(p => p.PublishDate).HasColumnType("DATETIME").HasColumnName("PublishDate").IsRequired();
         builder.Property(p => p.AuthorId).HasColumnType("UNIQUEIDENTIFIER").HasColumnName("AuthorId").IsRequired();
         builder.HasQueryFilter(p => !p.IsDeleted);
     }

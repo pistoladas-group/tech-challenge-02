@@ -3,5 +3,6 @@
         "**/.git": false,
         "**/bin": true,
         "**/obj": true,
-    }
+    },
+    "dotnet.defaultSolution": "TechNews.sln"
 }

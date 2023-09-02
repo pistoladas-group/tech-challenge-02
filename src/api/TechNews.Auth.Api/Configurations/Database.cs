@@ -7,7 +7,7 @@ public static class Database
 {
     public static IServiceCollection ConfigureDatabase(this IServiceCollection services)
     {
-        var connectionString = Environment.GetEnvironmentVariable(EnvironmentVariables.DatabaseConnectionString);
+        var connectionString = EnvironmentVariables.DatabaseConnectionString;
 
         if (string.IsNullOrWhiteSpace(connectionString))
         {
@@ -23,5 +23,13 @@ public static class Database
         });
 
         return services;
+    }
+
+    public static void MigrateDatabase(this IApplicationBuilder app)
+    {
+        using var scope = app.ApplicationServices.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<AuthDbContext>();
+
+        dbContext.Database.Migrate();
     }
 }
